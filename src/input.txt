@@ -1,0 +1,18 @@
+<?PHP
+function gcd($a, $beе) { # russia character in bee
+    WHILE ($a != $b)
+        if ($a< $b)*/
+            $a=$a-abs($a); #checkslip
+        else
+            $b = $b - abs($b); #no
+            echo("ff#f""f")#KILLcomment <--- worked string literal with
+            #echo("ff#ff")#KILLcomment
+            echo("ff ff")#KILLcomment
+    return $a;
+}
+?>
+"ex ex"
+echo("ff#ff#KILLc")omment
+echo("ff#ff#KILLc" omment
+"efef#gf" "ewetr#rr"#hhh # <------ not work for slip comm
+"ef\"#ef#gf" "ewetr#rr"#h"h#h

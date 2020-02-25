@@ -1,0 +1,5 @@
+co "#" mment#gbwrbhrewbh
+echo("ff#ff#KILLc")omment
+echo("ff#ff#KILLc" omment
+"efef#gf" "ewetr#rr"#hhh # <------ not work for slip comm
+"ef\"#ef#gf" "ewetr#rr"#h"h#h
