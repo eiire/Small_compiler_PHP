@@ -11,24 +11,12 @@ def lexer():
         # "ff#ff" line[0:check_thist_heshteg_after_cov(line) - 1!!!]
         if line.find('"') < line.find('#') < line.rfind('"'):
             # slize for thist # beginning left
-            tokens_in_line(line[0:check_thist_heshteg_after_cov(line) - 1], line_number,file_res)
+            tokens_in_line(line[0:check_thist_heshteg_after_cov(line) - 1], line_number, file_res)
         else:
             tokens_in_line(line.partition('#')[0], line_number, file_res)  # "ffff"
     file.close()
     file_res.close()
     return
-
-
-def check_thist_heshteg_after_cov(line):
-    i = 0
-    h = 0  # count cov
-    for ch in line:
-        i += 1
-        if ch.find('"') != -1:
-            h += 1
-        elif ch == '#' and h % 2 == 0:  # need that break after last # , but no thirst
-            break
-    return i
 
 
 def tokens_in_line(line, line_number, file_res):
@@ -50,6 +38,18 @@ def tokens_in_line(line, line_number, file_res):
                        + str(pos_tok_in_line(str_for_pos, word)) + ">"
                        + "   " + res_check + " " + word + '\n')
     return
+
+
+def check_thist_heshteg_after_cov(line):
+    i = 0
+    h = 0  # count cov
+    for ch in line:
+        i += 1
+        if ch.find('"') != -1:
+            h += 1
+        elif ch == '#' and h % 2 == 0:  # need that break after last # , but no thirst
+            break
+    return i
 
 
 def my_str_split(word):  # work with str
