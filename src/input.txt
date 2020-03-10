@@ -1,7 +1,7 @@
 <?PHP
 function gcd($a, $beе) { # russia character in bee
     WHILE ($a != $b)
-        if ($a< $b)*/
+        if ($a< $b)
             $a=$a-abs($a); #checkslip
         else
             $b = $b - abs($b); #no
@@ -10,9 +10,24 @@ function gcd($a, $beе) { # russia character in bee
             echo("ff ff")#KILLcomment
     return $a;
 }
+
+1000110
+0x846ff
+010
+099232
+
 ?>
 "ex ex"
 echo("ff#ff#KILLc")omment
 echo("ff#ff#KILLc" omment
 "efef#gf" "ewetr#rr"#hhh # <------ not work for slip comm
-"ef\"#ef#gf" "ewetr#rr"#h"h#h
+"ef"# ef#gf" "ewetr#rr"#h"h#h
+
+<?php
+    min(0b1100,0x846ff,0232,6);
+?>
+
+<?php
+  $string = 'APPLE';
+  echo stristr($string, 97);
+?>

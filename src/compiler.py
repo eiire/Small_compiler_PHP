@@ -1,5 +1,6 @@
 import sys
 import re
+from curses.ascii import isxdigit
 
 
 def lexer():
@@ -91,6 +92,7 @@ def pos_tok_in_line(str_for_pos, word):
 
 
 def check_family_token(token):
+    incor_char = {}
     # defined language
     if token == '{': return 'l_brace'
     if token == ';': return 'semi'
@@ -98,6 +100,7 @@ def check_family_token(token):
     if token == '(': return 'l_paren'
     if token == ')': return 'r_paren'
     if token == '-': return 'operator_sunstruction'
+    if token == ',': return 'comma'
     if token == '*': return 'operator_multiplication'
     if token == '/': return 'operator_division'
     if token == '%': return 'operator_mod'
@@ -128,11 +131,35 @@ def check_family_token(token):
             return 'identifier_variable'
         else:
             return 'unknown'
-    # check str literal and numeric constant
+
+    # check numeric_constant_OCT&simple
+    if token.isdigit() and token.find('0') != -1:
+        if token.find('8') != -1 or token.find('9') != -1:
+            return 'unknown'
+        return 'numeric_constant_oct'
+
     if token.isdigit(): return 'numeric_constant'
+
+    # check str_lit
     if ((token.find('"', len(token) - 1)) == (len(token) - 1) and token.find('"') != 0): return 'unknown'
     if ((token.find('"', len(token) - 1)) != (len(token) - 1) and token.find('"') == 0): return 'unknown'
     if ((token.find('"', len(token) - 1)) == (len(token) - 1) and token.find('"') == 0): return 'string_literal'
+
+
+    # check num_const_HEX&BIN
+    if token.find('0', 0) != -1 and token.find('x', 1) != -1:
+        check_correct = re.search('[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*', token[1:])
+        if check_correct.group() == token[1:]:
+            return 'numeric_constant_hex'
+        else:
+            return 'unknown'
+
+    if token.find('0', 0) != -1 and token.find('b', 1) != -1:
+        check_correct = re.search('[a-zA-Z_\x7f-\xff][a-zA-Z0-1_\x7f-\xff]*', token[1:])
+        if check_correct.group() == token[1:]:
+            return 'numeric_constant_binary'
+        else:
+            return 'unknown'
 
     # check for in correct tok
     check_correct = re.match("[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*", token)  # check incorrect characters

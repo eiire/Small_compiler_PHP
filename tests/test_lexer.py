@@ -7,10 +7,13 @@ class TestLexer(TestCase):
     def test_check_family_token(self):
         from src.compiler import check_family_token
         my_list_tokens = ['class', 'use', 'if', 'namespace', 'for', 'while', 'main', 'my_function_name', 'function',
-                          'return', 'echo', '"gggg', 'ffff"', 'ццkkц', '$*nhh*n', '$_var']
+                          'return', 'echo', '"gggg', 'ffff"', 'ццkkц', '$*nhh*n', '$_var', '11', '0x10', '01111001',
+                          '088', '0b1111']
         expected_name_tokens = ['keyword_class', 'keyword_use', 'keyword_if', 'keyword_namespace', 'keyword_for',
                                 'keyword_while', 'identifier', 'identifier', 'keyword_function', 'keyword_return',
-                                'identifier', 'unknown', 'unknown', 'unknown', 'unknown', 'identifier_variable']
+                                'identifier', 'unknown', 'unknown', 'unknown', 'unknown', 'identifier_variable',
+                                'numeric_constant', 'numeric_constant_hex', 'numeric_constant_oct', 'unknown',
+                                'numeric_constant_binary']
         i = 0
         for word in my_list_tokens:
             self.assertEqual(expected_name_tokens[i], check_family_token(word), "good")
