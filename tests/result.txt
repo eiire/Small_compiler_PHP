@@ -1,3 +1,0 @@
-Loc=<4:0>   keyword_function function
-Loc=<4:9>   identifier qwe
-Loc=<4:12>   l_paren (

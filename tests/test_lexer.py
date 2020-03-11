@@ -5,7 +5,7 @@ class TestLexer(TestCase):
     file = open("result.txt", "r+")  # clean file
 
     def test_check_family_token(self):
-        from src.compiler import check_family_token
+        from src.lexer import check_family_token
         my_list_tokens = ['class', 'use', 'if', 'namespace', 'for', 'while', 'main', 'my_function_name', 'function',
                           'return', 'echo', '"gggg', 'ffff"', 'ццkkц', '$*nhh*n', '$_var', '11', '0x10', '01111001',
                           '088', '0b1111']
@@ -20,14 +20,14 @@ class TestLexer(TestCase):
             i += 1
 
     def test_my_str_split(self):
-        from src.compiler import my_str_split
+        from src.lexer import my_str_split
         test_str = "&frg_23 function(frfr);}{-[]+"
         expected_true = "&frg_23 function ( frfr )  ;  }  {  -  [  ]  + "
         self.assertTrue(my_str_split(test_str) == expected_true, "Should be True")
 
     def test_tokens_in_line(self):
         file_clear = open("result.txt", 'w')  # clear file
-        from src.compiler import tokens_in_line
+        from src.lexer import tokens_in_line
         test_str = "function qwe("
         expected_true = ['Loc=<4:0>   keyword_function function\n', 'Loc=<4:9>   identifier qwe\n',
                          'Loc=<4:12>   l_paren (\n']
@@ -44,7 +44,7 @@ class TestLexer(TestCase):
 
 
     def test_lexer_comment(self):
-        from src.compiler import tokens_in_line, check_thist_heshteg_after_cov
+        from src.lexer import tokens_in_line, check_thist_heshteg_after_cov
         file = open("for_check_cooment.txt", 'r')
         file_res = open("result.txt", 'w') #  clear file
         line_number = 0

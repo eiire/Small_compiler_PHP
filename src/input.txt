@@ -1,33 +1,14 @@
 <?PHP
-function gcd($a, $beе) { # russia character in bee
+function gcd($a, $beе) {
     WHILE ($a != $b)
         if ($a< $b)
-            $a=$a-abs($a); #checkslip
+            $a=$a-abs($a);
         else
-            $b = $b - abs($b); #no
-            echo("ff#f""f")#KILLcomment <--- worked string literal with
-            #echo("ff#ff")#KILLcomment
-            echo("ff ff")#KILLcomment
+            $b = $b - abs($b);
     return $a;
 }
-
-1000110
-0x846ff
-010
-099232
-
 ?>
-"ex ex"
-echo("ff#ff#KILLc")omment
-echo("ff#ff#KILLc" omment
-"efef#gf" "ewetr#rr"#hhh # <------ not work for slip comm
-"ef"# ef#gf" "ewetr#rr"#h"h#h
 
 <?php
     min(0b1100,0x846ff,0232,6);
-?>
-
-<?php
-  $string = 'APPLE';
-  echo stristr($string, 97);
 ?>
