@@ -32,7 +32,7 @@ class TestLexer(TestCase):
         expected_true = ['Loc=<4:0>   keyword_function function\n', 'Loc=<4:9>   identifier qwe\n',
                          'Loc=<4:12>   l_paren (\n']
         file = open("result.txt", 'r+')
-        tokens_in_line(test_str, 4, file)
+        tokens_in_line(test_str, 4)
         i = 0
         for line in file:
             self.assertTrue(line == expected_true[i], "Should be True")
@@ -52,10 +52,9 @@ class TestLexer(TestCase):
             line_number += 1
             if line.find('"') < line.find('#') < line.rfind(
                     '"'):  # "ff#ff" line[0:check_thist_heshteg_after_cov(line) - 1!!!]
-                tokens_in_line(line[0:check_thist_heshteg_after_cov(line) - 1], line_number,
-                               file_res)  # slize for thist # beginning left
+                tokens_in_line(line[0:check_thist_heshteg_after_cov(line) - 1], line_number)  # slize for thist # beginning left
             else:
-                tokens_in_line(line.partition('#')[0], line_number, file_res)  # "ffff"
+                tokens_in_line(line.partition('#')[0], line_number)  # "ffff"
 
         file_res.close()
         file_res = open("result.txt", "r")
