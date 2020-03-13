@@ -12,6 +12,7 @@ def tokens_in_line(line, line_number):  # Generator line`s tokens
     new_line_tokens = []
     str_for_pos = line
 
+    #  Cut: grg"entity"grg --> grggrg
     new_tok_slit = re.findall('["].+["]', line)
     new_line_tokens += new_tok_slit
     new_line = re.sub('["].+["]', ' ', line)
@@ -48,6 +49,7 @@ def my_str_split(word):  # work with str
     # if ((token.find('"', len(token) - 1)) == (len(token) - 1) and token.find('"') == 0): return 'string_literal'
     # if ((word.find('"', len(word) - 1)) == (len(word) - 1) and token.find('"') != 0) or \
     #         ((token.find('"', len(token) - 1)) != (len(token) - 1) and token.find('"') == 0):
+    # print(word)
     for ch in word:  # range(word)
         # if word.find("==") != -1: #  upper other code because flag may be rewrite <----TASK
         #     fl = 1
@@ -56,7 +58,7 @@ def my_str_split(word):  # work with str
                 or ch == '-' or ch == '[' or ch == ']' or ch == ',' \
                 or (ch == '<' and word.lower().find('<?php') == -1) \
                 or (ch == '>' and word.find('?>') == -1) \
-                or (ch == '=' and (word.find('==') == -1 and word.find('===') == -1)):
+                or (ch == '=' and (word.find('==') == -1 and word.find('===') == -1 and word.find('!=') == -1)):
             fl = 2  # or ch == '"'
         elif ch == '$':
             fl = 1

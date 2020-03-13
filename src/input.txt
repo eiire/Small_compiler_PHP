@@ -1,14 +1,3 @@
-<?PHP
-function gcd($a, $beе) {
-    WHILE ($a != $b)
-        if ($a< $b)
-            $a=$a-abs($a);
-        else
-            $b = $b - abs($b);
-    return $a;
+function id() {
+    return 0
 }
-?>
-
-<?php
-    min(0b1100,0x846ff,0232,6);
-?>
