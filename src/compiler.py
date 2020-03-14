@@ -32,18 +32,20 @@ def start_compiler():
                         next(iterator)
                         for tok in tokens_in_line(line[0:check_thist_heshteg_after_cov(line) - 1], line_number):
                             next_tok = next(iterator)
-                            table(tok, next_tok)
+                            parsing(tok, next_tok)
                     except StopIteration:
-                        table(tok, tok)
+                        none_tok = Token('None', 'None', 'end_str')
+                        parsing(tok, none_tok)
                 else:
                     try:
                         iterator = iter(tokens_in_line(line.partition('#')[0], line_number))
                         next(iterator)
                         for tok in tokens_in_line(line.partition('#')[0], line_number):
                             next_tok = next(iterator)
-                            table(tok, next_tok)
+                            if parsing(tok, next_tok) != 'Next': return print('ERROR in: ', tok.position)
                     except StopIteration:
-                        table(tok, tok)
+                        none_tok = Token('None', 'None', 'end_str')
+                        parsing(tok, none_tok)
 
 
         elif sys.argv[1] == "--dump-asm":

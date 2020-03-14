@@ -2,9 +2,9 @@ import re
 
 
 class Token:
-    def __init__(self, name, token, position):
-        self.name = name
-        self.token = token
+    def __init__(self, lexeme, token_type, position):
+        self.lexeme = lexeme
+        self.token_type = token_type
         self.position = position
 
 
@@ -84,16 +84,18 @@ def check_family_token(token):
     if token == '{': return 'l_brace'
     if token == ';': return 'semi'
     if token == '}': return 'r_brace'
+    if token == 'break': return 'keyword_break'
     if token == '(': return 'l_paren'
     if token == ')': return 'r_paren'
     if token == '-': return 'operator_sunstruction'
+    if token == '+': return 'operator_sum'
     if token == ',': return 'comma'
     if token == '*': return 'operator_multiplication'
     if token == '/': return 'operator_division'
     if token == '%': return 'operator_mod'
     if token == '<': return 'operator_less'
     if token == '>': return 'operator_grater'
-    if token == '=': return 'operatorAssignment'
+    if token == '=': return 'operator_assignment'
     # if token == '"': return 'Literal'
     if token == '++': return 'operator_increment'
     if token == '!=': return 'operator_noteq'
@@ -120,7 +122,7 @@ def check_family_token(token):
             return 'unknown'
 
     # check numeric_constant_OCT&simple
-    if token.isdigit() and token.find('0') != -1:
+    if token.isdigit() and token.find('0') == 0:
         if token.find('8') != -1 or token.find('9') != -1:
             return 'unknown'
         return 'numeric_constant_oct'

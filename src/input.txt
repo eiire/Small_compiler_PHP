@@ -1,3 +1,10 @@
-function id() {
-    return 0
+<?PHP
+$i = 1;
+for (; ; ) {  #*
+    if ($i > 10) {
+        break;
+    }
+    echo $i;
+    $i = $i + 1;
 }
+?>
