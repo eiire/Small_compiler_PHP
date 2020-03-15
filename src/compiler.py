@@ -45,7 +45,7 @@ def start_compiler():
                             if parsing(tok, next_tok) != 'Next': return print('ERROR in: ', tok.position)
                     except StopIteration:
                         none_tok = Token('None', 'None', 'end_str')
-                        parsing(tok, none_tok)
+                        if parsing(tok, none_tok) != 'Next': return print('ERROR in: ', tok.position)
 
 
         elif sys.argv[1] == "--dump-asm":
