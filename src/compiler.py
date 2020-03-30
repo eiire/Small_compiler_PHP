@@ -44,6 +44,7 @@ def start_compiler():
                             next_tok = next(iterator)
                             if parsing(tok, next_tok) != 'Next': return print('ERROR in: ', tok.position)
                     except StopIteration:
+                        # print("F")
                         none_tok = Token('None', 'None', 'end_str')
                         if parsing(tok, none_tok) != 'Next': return print('ERROR in: ', tok.position)
 
@@ -58,3 +59,5 @@ def start_compiler():
 
 
 start_compiler()
+print(ast)
+print(stack_nodes_hierarchy)
