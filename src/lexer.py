@@ -87,7 +87,7 @@ def check_family_token(token):
     if token == 'break': return 'keyword_break'
     if token == '(': return 'l_paren'
     if token == ')': return 'r_paren'
-    if token == '-': return 'operator_sunstruction'
+    if token == '-': return 'operator_substruction'
     if token == '+': return 'operator_sum'
     if token == ',': return 'comma'
     if token == '*': return 'operator_multiplication'

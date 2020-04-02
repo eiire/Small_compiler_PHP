@@ -24,11 +24,11 @@ def start_compiler():
                     for tok in tokens_in_line(line.partition('#')[0], line_number):
                         file_res.write(tok.position + "\t" + tok.lexeme + ' ' + "#" + tok.token_type + '\n')
 
-        # исправить баг со строкой
         elif sys.argv[1] == "--dump-ast":
             line_number = 0
             for line in file:
                 line_number += 1
+                line = re.sub('#.+', '', line)
                 if line.find('"') < line.find('#') < line.rfind('"') and line != '\n':
                     try:
                         iterator = iter(tokens_in_line(line[0:check_thist_heshteg_after_cov(line) - 1], line_number))
@@ -37,7 +37,6 @@ def start_compiler():
                             next_tok = next(iterator)
                             if parsing(tok, next_tok) != 'Next': return print('ERROR in: ', tok.position)
                     except StopIteration:
-                        # пустая строка, вызов парсера с предыдущими значениями токена
                         none_tok = Token('None', 'None', 'end_str')
                         if parsing(tok, none_tok) != 'Next': return print('ERROR in: ', tok.position)
 
@@ -53,7 +52,8 @@ def start_compiler():
                         # пустая строка, вызов парсера с предыдущими значениями токена
                         none_tok = Token('None', 'None', 'end_str')
                         if parsing(tok, none_tok) != 'Next': return print('ERROR in: ', tok.position)
-
+            if check_nesting() != 0:
+                print('error: expected ‘}’ at end of input')
 
         elif sys.argv[1] == "--dump-asm":
             return 0
