@@ -1,5 +1,6 @@
 from .parser_helper import *
 from .ast_helper import *
+from src.symbol_table import *
 
 # общая таблица(общий случай), она дополняется вспомогательной для конструкций из помощника
 parser_table = {
@@ -71,14 +72,16 @@ def parsing(current_tok, next_tok):
 # ----->MAIN FUNC for AST<------ next_token понадобится для дальнейшего расширения языка
 def node_creating(current_token, next_token):
     need_lvl = ast
-
+    current_lvl = 0  # for symbol table
     # проход по namespace
     for construction in stack_nodes_hierarchy:
         for el_on_lvl in reversed(need_lvl["children"]):
             if el_on_lvl["kind"] == construction:
+                current_lvl += 1
                 need_lvl = el_on_lvl  # (dict)
                 break
 
+    craft_symbol_table(str(current_lvl), current_token, stack_nodes_hierarchy)
     # Describe all constructions
     create_node_for(current_token, next_token, need_lvl)
     create_node_assign(current_token, next_token, need_lvl)

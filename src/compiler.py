@@ -66,5 +66,7 @@ def start_compiler():
 
 start_compiler()
 
+print(symbol_table)
+
 with open("../build/AST.json", "w", encoding="utf-8") as file:
     json.dump(ast, file, indent=4)
