@@ -66,7 +66,8 @@ def start_compiler():
 
 start_compiler()
 
-print(symbol_table)
+with open("../build/symbol_table.json", "w", encoding="utf-8") as file:
+    json.dump(symbol_table, file, indent=4)
 
 with open("../build/AST.json", "w", encoding="utf-8") as file:
     json.dump(ast, file, indent=4)
