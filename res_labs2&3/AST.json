@@ -1,0 +1,68 @@
+{
+    "kind": "program",
+    "children": [
+        {
+            "kind": "assign",
+            "left": "$var1_lvl_0",
+            "right": "6 ",
+            "position": 0
+        },
+        {
+            "kind": "keyword_for",
+            "init": "$i = 1 ",
+            "test": "$i < 10 ",
+            "increment": "$i = $i + 1 ",
+            "position": "3:0",
+            "children": [
+                {
+                    "kind": "assign",
+                    "left": "$var1_lvl_1",
+                    "right": "1 ",
+                    "position": 0
+                },
+                {
+                    "kind": "keyword_for",
+                    "init": "$i = 1 ",
+                    "test": "$i < 10 ",
+                    "increment": "$i = $i + 1 ",
+                    "position": "6:4",
+                    "children": [
+                        {
+                            "kind": "assign",
+                            "left": "$var1_lvl_2",
+                            "right": "1 ",
+                            "position": 0
+                        }
+                    ]
+                },
+                {
+                    "kind": "keyword_for",
+                    "init": "$i = 1 ",
+                    "test": "$i < 10 ",
+                    "increment": "$i = $i + 1 ",
+                    "position": "10:4",
+                    "children": [
+                        {
+                            "kind": "assign",
+                            "left": "$var2_lvl_2",
+                            "right": "1 ",
+                            "position": 0
+                        }
+                    ]
+                },
+                {
+                    "kind": "assign",
+                    "left": "$var2_lvl_1",
+                    "right": "4 ",
+                    "position": 0
+                }
+            ]
+        },
+        {
+            "kind": "assign",
+            "left": "$var1_lvl_0",
+            "right": "10 ",
+            "position": 0
+        }
+    ]
+}
