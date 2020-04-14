@@ -9,7 +9,7 @@ constructions = {'keyword_for': [['identifier_variable', 'operator_assignment', 
                                  ['identifier_variable', 'operator_assignment', 'operator_sum', 'numeric_constant']],
 
                  'assign': ['identifier_variable', 'operator_assignment', 'numeric_constant', 'operator_sum',
-                            'operator_substruction', 'semi']
+                            'operator_substruction', 'semi', 'string_literal']
 
                  # other constructions
                  }
@@ -18,12 +18,14 @@ nesting_stack = []
 
 
 def check_instruction(current_tok, next_tok):
+    # print(current_tok.lexeme, next_tok.lexeme, current_construction.token_type) # DEBUGGER)
     # подобное начальное условие формируется похожим образом для всех конструкций языка
     if current_construction.token_type == 'None' and \
             (current_tok.token_type == 'identifier_variable' and next_tok.token_type == 'operator_assignment') \
             or current_construction.token_type == 'assign':
         current_construction.token_type = 'assign'
 
+        if next_tok.token_type == 'operator_assignment': current_construction.lexeme = current_tok.lexeme # для main VAR
         # check expression (list construction)
         if check_construction(current_tok, next_tok) != 'Next':
             raise KeyError
@@ -35,6 +37,8 @@ def check_instruction(current_tok, next_tok):
         if current_tok.token_type == 'semi':
             current_construction.token_type = 'None'
             current_construction.position = 0
+            current_construction.lexeme = 'None'
+
 
 
 def check_for(current_tok, next_tok):

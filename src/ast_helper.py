@@ -30,7 +30,7 @@ def create_node_assign(current_token, next_token, need_lvl):
         need_lvl["children"].append({"kind": current_construction.token_type,
                                      "left": current_token.lexeme,
                                      "right": "",
-                                     "position": current_construction.position,
+                                     "position": current_token.position,
                                      })
     elif current_construction.token_type == 'assign' and current_construction.position == 1 \
             and current_token.lexeme != '=':

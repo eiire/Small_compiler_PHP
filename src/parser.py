@@ -11,18 +11,19 @@ parser_table = {
     'keyword_if': ['l_paren'],
     'identifier': ['operator_assignment', 'semi', 'operator_sum', 'identifier_variable'],
     'semi': ['None', 'keyword_for', 'semi', 'r_paren', 'numeric_constant', 'identifier_variable'],
-    'numeric_constant': ['semi', 'r_paren'],
+    'numeric_constant': ['semi', 'r_paren', 'operator_sum'],
     'keyword_<?php': ['None'],
-    'operator_assignment': ['numeric_constant', 'identifier_variable'],
+    'operator_assignment': ['numeric_constant', 'identifier_variable', 'string_literal'],
     'r_paren': ['semi', 'l_brace', 'r_brace'],
     'l_brace': ['None', 'identifier', 'identifier_variable'],
     'operator_grater': ['numeric_constant'],
     'keyword_break': ['semi'],
     'r_brace': ['None'],
-    'operator_sum': ['numeric_constant', 'identifier_variables'],
+    'operator_sum': ['numeric_constant', 'identifier_variable', 'string_literal'],
     'keyword_?>': ['None'],
     'operator_multiplication': ['identifier_variables', 'constant_numeric'],
     'keyword_function': ['identifier'],
+    'string_literal': ['operator_sum', 'identifier_variable', 'semi'],
 }
 
 ast = {
@@ -81,7 +82,7 @@ def node_creating(current_token, next_token):
                 need_lvl = el_on_lvl  # (dict)
                 break
 
-    craft_symbol_table(str(current_lvl), current_token)
+    craft_symbol_table(str(current_lvl), current_token, next_token)
     # Describe all constructions
     create_node_for(current_token, next_token, need_lvl)
     create_node_assign(current_token, next_token, need_lvl)

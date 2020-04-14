@@ -1,4 +1,5 @@
-from src.parser_helper import nesting_stack, current_construction
+from .parser_helper import nesting_stack, current_construction
+from .sema_helper import cut_type_var, find_var_above, warnings
 
 symbol_table = {
     '0:0': [],
@@ -10,8 +11,10 @@ counter_ns = {
 
 
 # В зависимости от появления конструкций должно расширяться
-def check_for_identifier(current_token):
-    if current_token.token_type == 'identifier_variable' \
+def check_for_identifier(current_token, next_token):
+    if (current_token.token_type == 'identifier_variable'
+            or current_token.token_type == 'string_literal'
+            or current_token.token_type == 'numeric_constant')\
             and current_construction.token_type != 'keyword_for' \
             and current_construction.token_type != 'None':
         return True
@@ -19,7 +22,7 @@ def check_for_identifier(current_token):
         return False
 
 
-def craft_symbol_table(current_lvl, current_token):
+def craft_symbol_table(current_lvl, current_token, next_token):
     global counter_ns
     lvls = [lvl for lvl in list(symbol_table.keys())]
 
@@ -29,17 +32,28 @@ def craft_symbol_table(current_lvl, current_token):
             if current_token.lexeme == '{':
                 counter_ns[current_lvl].append('{')
 
-            if check_for_identifier(current_token) \
-                    and current_token.lexeme not in symbol_table[current_lvl + ':' + str(len(counter_ns[current_lvl]))]:
-                symbol_table[current_lvl + ':' + str(len(counter_ns[current_lvl]))].append(current_token.lexeme)
+            if check_for_identifier(current_token, next_token) \
+                    and current_token.lexeme \
+                    not in cut_type_var(list(symbol_table[current_lvl + ':' + str(len(counter_ns[current_lvl]))])):
+
+                if find_var_above(symbol_table, current_token, current_lvl) == False:
+                    if current_token.token_type == 'string_literal' or current_token.token_type == 'numeric_constant':
+                        warnings(current_token, list(symbol_table),
+                                 current_lvl + ':' + str(len(counter_ns[current_lvl])), current_construction.lexeme)
+                        symbol_table[current_lvl + ':' + str(len(counter_ns[current_lvl]))][-1] \
+                            += ':' + current_token.token_type  # change type
+                    else:
+                        symbol_table[current_lvl + ':' + str(len(counter_ns[current_lvl]))].append(current_token.lexeme)
 
         elif current_lvl not in lvls:
             if current_token.lexeme == '{':
                 counter_ns.update({current_lvl: ['{']})
 
-            if check_for_identifier(current_token):
-                symbol_table.update({current_lvl + ':' + str(len(counter_ns[current_lvl])): [current_token.lexeme]})
+            if check_for_identifier(current_token, next_token):
+                symbol_table.update({current_lvl + ':' + str(len(counter_ns[current_lvl])): [current_token.lexeme + ':'
+                                                                                             + 'NULL']})
     except:
         # Создание областей
         if current_token.lexeme == '{':
             counter_ns.update({current_lvl: ['{']})
+

@@ -13,10 +13,10 @@ def tokens_in_line(line, line_number):  # Generator line`s tokens
     str_for_pos = line
 
     #  Cut: grg"entity"grg --> grggrg
-    new_tok_slit = re.findall('["].+["]', line)
-    new_line_tokens += new_tok_slit
-    new_line = re.sub('["].+["]', ' ', line)
-    line = new_line
+    # new_tok_slit = re.findall('["].+["]', line)
+    # new_line_tokens += new_tok_slit
+    # new_line = re.sub('["].+["]', ' ', line)
+    # line = new_line
 
     for word in line.split():  # --> create_list
         #  for "example example"
