@@ -10,11 +10,10 @@ counter_ns = {
 }
 
 
-# В зависимости от появления конструкций должно расширяться
 def check_for_identifier(current_token, next_token):
     if (current_token.token_type == 'identifier_variable'
-            or current_token.token_type == 'string_literal'
-            or current_token.token_type == 'numeric_constant')\
+        or current_token.token_type == 'string_literal'
+        or current_token.token_type == 'numeric_constant') \
             and current_construction.token_type != 'keyword_for' \
             and current_construction.token_type != 'None':
         return True
@@ -32,13 +31,11 @@ def craft_symbol_table(current_lvl, current_token, next_token):
             if current_token.lexeme == '{':
                 counter_ns[current_lvl].append('{')
 
-
             if check_for_identifier(current_token, next_token) \
                     and current_token.lexeme \
                     not in cut_type_var(list(symbol_table[current_lvl + ':' + str(len(counter_ns[current_lvl]))])):
 
-                if find_var_above(symbol_table, current_token, current_lvl) == False:
-
+                if not find_var_above(symbol_table, current_token, current_lvl):
                     if current_token.token_type == 'string_literal' or current_token.token_type == 'numeric_constant':
                         warnings(current_token,
                                  next_token,
@@ -48,14 +45,20 @@ def craft_symbol_table(current_lvl, current_token, next_token):
                     else:
                         symbol_table[current_lvl + ':' + str(len(counter_ns[current_lvl]))]. \
                             append(current_token.lexeme + ':' + 'NULL')
+
+                        warnings(current_token,
+                                 next_token,
+                                 dict(symbol_table),
+                                 current_lvl + ':' + str(len(counter_ns[current_lvl])),
+                                 current_construction.lexeme)
                 else:
                     warnings(current_token,
-                                   next_token,
-                                   dict(symbol_table),
-                                   current_lvl + ':' + str(len(counter_ns[current_lvl])),
-                                   current_construction.lexeme)
+                             next_token,
+                             dict(symbol_table),
+                             current_lvl + ':' + str(len(counter_ns[current_lvl])),
+                             current_construction.lexeme)
             elif current_token.token_type == 'operator_assignment' and \
-                        (next_token.token_type == 'string_literal' or next_token.token_type == 'numeric_constant'):
+                    (next_token.token_type == 'string_literal' or next_token.token_type == 'numeric_constant'):
                 change_type_main_var(symbol_table, current_construction, next_token, current_lvl)
 
         elif current_lvl not in lvls:
@@ -63,10 +66,9 @@ def craft_symbol_table(current_lvl, current_token, next_token):
                 counter_ns.update({current_lvl: ['{']})
 
             if check_for_identifier(current_token, next_token):
-                symbol_table.update({current_lvl + ':' + str(len(counter_ns[current_lvl])): [current_token.lexeme + ':'
-                                                                                             + 'NULL']})
+                symbol_table.update({current_lvl + ':' + str(len(counter_ns[current_lvl])):
+                                         [current_token.lexeme + ':' + 'NULL']})
     except:
         # Создание областей
         if current_token.lexeme == '{':
             counter_ns.update({current_lvl: ['{']})
-
