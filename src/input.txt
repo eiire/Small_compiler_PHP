@@ -1,10 +1,11 @@
 <?PHP
 $var1_lvl_0 = "F";
+
 for ($i = 1; $i < 10; $i = $i + 1) {
     $var1_lvl_1 = 1;
 
     for ($i = 1; $i < 10; $i = $i + 1) {
-        $var1_lvl_2 = $var1_lvl_1 + 10 + "F";
+        $var1_lvl_2 = $var1_lvl_1 + 10 + "F" + $var4;
     }
 }
 

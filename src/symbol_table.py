@@ -1,5 +1,5 @@
 from .parser_helper import nesting_stack, current_construction
-from .sema_helper import cut_type_var, find_var_above, warnings
+from .sema_helper import cut_type_var, find_var_above, warnings, change_type_main_var
 
 symbol_table = {
     '0:0': [],
@@ -32,18 +32,31 @@ def craft_symbol_table(current_lvl, current_token, next_token):
             if current_token.lexeme == '{':
                 counter_ns[current_lvl].append('{')
 
+
             if check_for_identifier(current_token, next_token) \
                     and current_token.lexeme \
                     not in cut_type_var(list(symbol_table[current_lvl + ':' + str(len(counter_ns[current_lvl]))])):
 
                 if find_var_above(symbol_table, current_token, current_lvl) == False:
+
                     if current_token.token_type == 'string_literal' or current_token.token_type == 'numeric_constant':
-                        warnings(current_token, list(symbol_table),
-                                 current_lvl + ':' + str(len(counter_ns[current_lvl])), current_construction.lexeme)
-                        symbol_table[current_lvl + ':' + str(len(counter_ns[current_lvl]))][-1] \
-                            += ':' + current_token.token_type  # change type
+                        warnings(current_token,
+                                 next_token,
+                                 dict(symbol_table),
+                                 current_lvl + ':' + str(len(counter_ns[current_lvl])),
+                                 current_construction.lexeme)
                     else:
-                        symbol_table[current_lvl + ':' + str(len(counter_ns[current_lvl]))].append(current_token.lexeme)
+                        symbol_table[current_lvl + ':' + str(len(counter_ns[current_lvl]))]. \
+                            append(current_token.lexeme + ':' + 'NULL')
+                else:
+                    warnings(current_token,
+                                   next_token,
+                                   dict(symbol_table),
+                                   current_lvl + ':' + str(len(counter_ns[current_lvl])),
+                                   current_construction.lexeme)
+            elif current_token.token_type == 'operator_assignment' and \
+                        (next_token.token_type == 'string_literal' or next_token.token_type == 'numeric_constant'):
+                change_type_main_var(symbol_table, current_construction, next_token, current_lvl)
 
         elif current_lvl not in lvls:
             if current_token.lexeme == '{':
