@@ -46,7 +46,7 @@ def start_compiler():
                         for tok in tokens_in_line(line.partition('#')[0], line_number):
                             next_tok = next(iterator)
                             if parsing(tok, next_tok) != 'Next':
-                                print(parsing(tok, next_tok))
+                                # print(parsing(tok, next_tok))
                                 return print('ERROR in: ', tok.position)
 
 

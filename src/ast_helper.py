@@ -1,4 +1,4 @@
-from src.parser_helper import *
+from .parser_helper import *
 
 
 # Describe all constructions

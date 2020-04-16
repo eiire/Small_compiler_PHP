@@ -10,15 +10,7 @@ counter_ns = {
 }
 
 
-def check_for_identifier(current_token, next_token):
-    if (current_token.token_type == 'identifier_variable'
-        or current_token.token_type == 'string_literal'
-        or current_token.token_type == 'numeric_constant') \
-            and current_construction.token_type != 'keyword_for' \
-            and current_construction.token_type != 'None':
-        return True
-    else:
-        return False
+operation = ""
 
 
 def craft_symbol_table(current_lvl, current_token, next_token):
@@ -41,7 +33,8 @@ def craft_symbol_table(current_lvl, current_token, next_token):
                                  next_token,
                                  dict(symbol_table),
                                  current_lvl + ':' + str(len(counter_ns[current_lvl])),
-                                 current_construction.lexeme)
+                                 current_construction.lexeme,
+                                 operation)
                     else:
                         symbol_table[current_lvl + ':' + str(len(counter_ns[current_lvl]))]. \
                             append(current_token.lexeme + ':' + 'NULL')
@@ -50,13 +43,15 @@ def craft_symbol_table(current_lvl, current_token, next_token):
                                  next_token,
                                  dict(symbol_table),
                                  current_lvl + ':' + str(len(counter_ns[current_lvl])),
-                                 current_construction.lexeme)
+                                 current_construction.lexeme,
+                                 operation)
                 else:
                     warnings(current_token,
                              next_token,
                              dict(symbol_table),
                              current_lvl + ':' + str(len(counter_ns[current_lvl])),
-                             current_construction.lexeme)
+                             current_construction.lexeme,
+                             operation)
             elif current_token.token_type == 'operator_assignment' and \
                     (next_token.token_type == 'string_literal' or next_token.token_type == 'numeric_constant'):
                 change_type_main_var(symbol_table, current_construction, next_token, current_lvl)
@@ -72,3 +67,19 @@ def craft_symbol_table(current_lvl, current_token, next_token):
         # Создание областей
         if current_token.lexeme == '{':
             counter_ns.update({current_lvl: ['{']})
+
+
+def check_for_identifier(current_token, next_token):
+    global operation
+    # Выяснить совершаемую операцию ДО определения типа переменной
+    if current_token.token_type == 'operator_sum' or current_token.token_type == 'operator_multiplication':
+        operation = current_token.token_type
+
+    if (current_token.token_type == 'identifier_variable'
+        or current_token.token_type == 'string_literal'
+        or current_token.token_type == 'numeric_constant') \
+            and current_construction.token_type != 'keyword_for' \
+            and current_construction.token_type != 'None':
+        return True
+    else:
+        return False

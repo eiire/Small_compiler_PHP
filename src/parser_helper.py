@@ -9,7 +9,7 @@ constructions = {'keyword_for': [['identifier_variable', 'operator_assignment', 
                                  ['identifier_variable', 'operator_assignment', 'operator_sum', 'numeric_constant']],
 
                  'assign': ['identifier_variable', 'operator_assignment', 'numeric_constant', 'operator_sum',
-                            'operator_substruction', 'semi', 'string_literal']
+                            'operator_substruction', 'semi', 'string_literal', 'operator_multiplication']
 
                  # other constructions
                  }
@@ -18,7 +18,6 @@ nesting_stack = []
 
 
 def check_instruction(current_tok, next_tok):
-    # print(current_tok.lexeme, next_tok.lexeme, current_construction.token_type) # DEBUGGER)
     # подобное начальное условие формируется похожим образом для всех конструкций языка
     if current_construction.token_type == 'None' and \
             (current_tok.token_type == 'identifier_variable' and next_tok.token_type == 'operator_assignment') \
@@ -26,7 +25,7 @@ def check_instruction(current_tok, next_tok):
         current_construction.token_type = 'assign'
 
         if next_tok.token_type == 'operator_assignment': current_construction.lexeme = current_tok.lexeme # для main VAR
-        # check expression (list construction)
+
         if check_construction(current_tok, next_tok) != 'Next':
             raise KeyError
 
@@ -38,7 +37,6 @@ def check_instruction(current_tok, next_tok):
             current_construction.token_type = 'None'
             current_construction.position = 0
             current_construction.lexeme = 'None'
-
 
 
 def check_for(current_tok, next_tok):
@@ -65,8 +63,6 @@ def check_for(current_tok, next_tok):
         elif check_construction(current_tok, next_tok) == 'End_construction':
             current_construction.token_type = 'None'
             current_construction.position = 0
-        # return 1
-    # return 0
 
 
 def check_php(current_tok):
