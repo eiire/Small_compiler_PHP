@@ -14,28 +14,27 @@ def warnings(current_token, next_token, symbol_table, lvl_and_ns, variable, oper
     # print(type_entity, current_token.lexeme, next_token.lexeme, operation) # DEBUG
     if get_type_var(symbol_table, current_token, lvl_and_ns) == 'NULL' \
             and next_token.token_type != 'operator_assignment':
-        print(f"NOTICE Undefined variable: {current_token.lexeme} on {current_token.position}")
+        return(f"NOTICE Undefined variable: {current_token.lexeme} on {current_token.position}")
 
     if operation == 'operator_sum' and type_entity == 'string_literal' \
             and current_token.token_type == "string_literal" and current_token.lexeme[1:-1 - 1].isdigit() \
             and next_token.token_type != 'semi':
-        print(f"Warning: A non-numeric value encountered in {current_token.position}")
+        return(f"Warning: A non-numeric value encountered in {current_token.position}")
 
     elif type_entity == 'numeric_constant' and current_token.token_type == "string_literal" \
             and current_token.lexeme[1:-1 - 1].isdigit() != True and next_token.token_type != 'semi':
-        print(f"Warning: A non-numeric value encountered in {current_token.position}")
+        return(f"Warning: A non-numeric value encountered in {current_token.position}")
 
     elif type_entity == 'string_literal' and next_token.token_type == 'operator_multiplication':
-        print(f"Warning: A non-numeric value encountered in {current_token.position}")
+        return(f"Warning: A non-numeric value encountered in {current_token.position}")
 
     elif operation == 'operator_multiplication' and type_entity == 'string_literal':
-        # print(type_entity, current_token.lexeme, next_token.lexeme, operation) # DEBUG
-        print(f"Warning: A non-numeric value encountered in {current_token.position}")
+        # return(type_entity, current_token.lexeme, next_token.lexeme, operation) # DEBUG
+        return(f"Warning: A non-numeric value encountered in {current_token.position}")
 
     elif operation == 'operator_sum' and type_entity != 'numeric_constant' \
             and current_token.token_type == 'string_literal':
-        print(f"Warning: A non-numeric value encountered in {current_token.position}")
-
+        return(f"Warning: A non-numeric value encountered in {current_token.position}")
     # print(type_entity, current_token.lexeme, next_token.lexeme, operation) # DEBUG
 
 

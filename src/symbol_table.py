@@ -29,29 +29,29 @@ def craft_symbol_table(current_lvl, current_token, next_token):
 
                 if not find_var_above(symbol_table, current_token, current_lvl):
                     if current_token.token_type == 'string_literal' or current_token.token_type == 'numeric_constant':
-                        warnings(current_token,
+                        print(warnings(current_token,
                                  next_token,
                                  dict(symbol_table),
                                  current_lvl + ':' + str(len(counter_ns[current_lvl])),
                                  current_construction.lexeme,
-                                 operation)
+                                 operation).rstrip(None))
                     else:
                         symbol_table[current_lvl + ':' + str(len(counter_ns[current_lvl]))]. \
                             append(current_token.lexeme + ':' + 'NULL')
 
-                        warnings(current_token,
+                        print(warnings(current_token,
                                  next_token,
                                  dict(symbol_table),
                                  current_lvl + ':' + str(len(counter_ns[current_lvl])),
                                  current_construction.lexeme,
-                                 operation)
+                                 operation).rstrip(None))
                 else:
-                    warnings(current_token,
+                    print(warnings(current_token,
                              next_token,
                              dict(symbol_table),
                              current_lvl + ':' + str(len(counter_ns[current_lvl])),
                              current_construction.lexeme,
-                             operation)
+                             operation).rstrip(None))
             elif current_token.token_type == 'operator_assignment' and \
                     (next_token.token_type == 'string_literal' or next_token.token_type == 'numeric_constant'):
                 change_type_main_var(symbol_table, current_construction, next_token, current_lvl)
