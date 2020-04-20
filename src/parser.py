@@ -7,7 +7,8 @@ parser_table = {
     'keyword_for': ['l_paren'],
     'identifier_variable': ['operator_assignment', 'operator_sum', 'operator_substruction', 'operator_multiplication',
                             'operator_grater', 'operator_less', 'r_paren', 'semi'],
-    'l_paren': ['semi', 'identifier_variable', 'string_literal'],
+
+    'l_paren': ['semi', 'identifier_variable', 'string_literal', 'numeric_constant'],
     'operator_less': ['numeric_constant', 'identifier_variable'],
     'keyword_if': ['l_paren'],
     'identifier': ['operator_assignment', 'semi', 'operator_sum', 'identifier_variable'],
@@ -23,7 +24,11 @@ parser_table = {
     'operator_sum': ['numeric_constant', 'identifier_variable', 'string_literal'],
     'keyword_?>': ['None'],
     'operator_multiplication': ['identifier_variable', 'numeric_constant', 'string_literal'],
-    'string_literal': ['operator_sum', 'identifier_variable', 'semi', 'operator_multiplication'],
+    'string_literal': ['operator_sum', 'identifier_variable', 'semi', 'operator_multiplication',
+                       'dot', 'comma', 'r_paren'],
+    'keyword_echo': ['l_paren', 'identifier_variable', 'string_literal', 'numeric_constant', 'comma', 'dot'],
+    'dot': ['string_literal', 'numeric_constant', 'identifier_variable'],
+    'comma': ['string_literal', 'numeric_constant', 'identifier_variable'],
 }
 
 ast = {
@@ -34,18 +39,21 @@ ast = {
 }
 
 # Парсер использует current_costruction из parser_helper для для поддержания вложенностей и определения, что проверяется
-stack_nodes_hierarchy = ['program'] # контроль вложенностей
+stack_nodes_hierarchy = ['program']  # контроль вложенностей
 
 
 def parsing(current_tok, next_tok):
-    # print(current_tok.lexeme, next_tok.lexeme, current_construction.token_type) # DEBUGGER)
     try:
         if next_tok.token_type in parser_table[current_tok.token_type]:
+            print(current_tok.lexeme, next_tok.lexeme, current_construction.token_type) # DEBUGGER)
+
             # dangerous (в php все конструкции, имеющие вложенность, имеют и открывающую скобку => должно работать)
-            if current_tok.lexeme == '(':
+            if current_tok.lexeme == '(' and current_construction.token_type != 'keyword_echo':
                 stack_nodes_hierarchy.append(current_construction.token_type)
 
             check_php(current_tok)
+
+            check_echo(current_tok, next_tok)
 
             check_for(current_tok, next_tok)
 
@@ -68,7 +76,7 @@ def parsing(current_tok, next_tok):
         print("Syntax error: ", current_tok.lexeme)
 
 
-# ----->MAIN FUNC for AST<------ next_token понадобится для дальнейшего расширения языка
+# MAIN FUNC for AST
 def node_creating(current_token, next_token):
     need_lvl = ast
     current_lvl = 0  # for symbol table
@@ -84,3 +92,4 @@ def node_creating(current_token, next_token):
     # Describe all constructions
     create_node_for(current_token, next_token, need_lvl)
     create_node_assign(current_token, next_token, need_lvl)
+    create_node_echo(current_token, next_token, need_lvl)

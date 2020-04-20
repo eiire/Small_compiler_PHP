@@ -8,24 +8,18 @@ class Token:
         self.position = position
 
 
-def tokens_in_line(line, line_number):  # Generator line`s tokens
+# Generator line`s tokens
+def tokens_in_line(line, line_number):
     new_line_tokens = []
     str_for_pos = line
 
-    #  Cut: grg"entity"grg --> grggrg
-    # new_tok_slit = re.findall('["].+["]', line)
-    # new_line_tokens += new_tok_slit
-    # new_line = re.sub('["].+["]', ' ', line)
-    # line = new_line
-
-    for word in line.split():  # --> create_list
-        #  for "example example"
-        new_line_tokens += my_str_split(word).split()  # str in list new_line_tokens =
-    for word in new_line_tokens:  # ' '.join(new_line_tokens) # back to str
+    for word in line.split():
+        new_line_tokens += my_str_split(word).split()
+    for word in new_line_tokens:
         res_check = check_family_token(word)
-        tok = Token(word, res_check, str(line_number) + ":" + str(pos_tok_in_line(str_for_pos, word)))  # Create one tok
+        tok = Token(word, res_check, str(line_number) + ":" + str(pos_tok_in_line(str_for_pos, word)))
 
-        yield tok  # Create generator`s from same tok
+        yield tok
 
 
 def check_thist_heshteg_after_cov(line):
@@ -40,22 +34,13 @@ def check_thist_heshteg_after_cov(line):
     return i
 
 
-def my_str_split(word):  # work with str
+def my_str_split(word):
     part_res = ""
     fl = 0
-    # print(word)
-    # check for str_literal --> code <-- !!! "efef#gf""ewet)r#rr"#hhh
 
-    # if ((token.find('"', len(token) - 1)) == (len(token) - 1) and token.find('"') == 0): return 'string_literal'
-    # if ((word.find('"', len(word) - 1)) == (len(word) - 1) and token.find('"') != 0) or \
-    #         ((token.find('"', len(token) - 1)) != (len(token) - 1) and token.find('"') == 0):
-    # print(word)
     for ch in word:  # range(word)
-        # if word.find("==") != -1: #  upper other code because flag may be rewrite <----TASK
-        #     fl = 1
-
         if ch == ')' or ch == '}' or ch == ';' or ch == ':' or ch == '(' or ch == '{' or ch == '+' \
-                or ch == '-' or ch == '[' or ch == ']' or ch == ',' \
+                or ch == '-' or ch == '[' or ch == ']' or ch == ',' or ch == '.' \
                 or (ch == '<' and word.lower().find('<?php') == -1) \
                 or (ch == '>' and word.find('?>') == -1) \
                 or (ch == '=' and (word.find('==') == -1 and word.find('===') == -1 and word.find('!=') == -1)):
@@ -71,7 +56,7 @@ def my_str_split(word):  # work with str
             fl = 0
         else:
             part_res = part_res + ' ' + ch
-            fl = 0  # print(part_res) put space only befor symbol/-->worked for PHP<--/ may be bug
+            fl = 0  # print(part_res)  # put space only before symbol (worked for PHP, may be bug)
     return part_res
 
 
@@ -90,6 +75,7 @@ def check_family_token(token):
     if token == '-': return 'operator_substruction'
     if token == '+': return 'operator_sum'
     if token == ',': return 'comma'
+    if token == '.': return 'dot'
     if token == '*': return 'operator_multiplication'
     if token == '/': return 'operator_division'
     if token == '%': return 'operator_mod'
@@ -109,6 +95,7 @@ def check_family_token(token):
     if token.lower() == 'main': return 'identifier'
     if token.lower() == 'while': return 'keyword_while'
     if token.lower() == 'function': return 'keyword_function'
+    if token.lower() == 'echo': return 'keyword_echo'
     if token.lower() == '<?php': return 'keyword_<?php'
     if token == '?>': return 'keyword_?>'
     if token.lower() == 'int': return 'int'

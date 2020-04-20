@@ -9,7 +9,10 @@ constructions = {'keyword_for': [['identifier_variable', 'operator_assignment', 
                                  ['identifier_variable', 'operator_assignment', 'operator_sum', 'numeric_constant']],
 
                  'assign': ['identifier_variable', 'operator_assignment', 'numeric_constant', 'operator_sum',
-                            'operator_substruction', 'semi', 'string_literal', 'operator_multiplication']
+                            'operator_substruction', 'semi', 'string_literal', 'operator_multiplication'],
+
+                 'keyword_echo': ['r_paren', 'l_paren', 'dot', 'identifier_variable', 'numeric_constant',
+                                  'string_literal'],
 
                  # other constructions
                  }
@@ -26,7 +29,7 @@ def check_instruction(current_tok, next_tok):
 
         if next_tok.token_type == 'operator_assignment': current_construction.lexeme = current_tok.lexeme # для main VAR
 
-        if check_construction(current_tok, next_tok) != 'Next':
+        if check_construction(current_tok, next_tok) == 'Incorrect_construction':
             raise KeyError
 
         # left and right part instruction
@@ -37,6 +40,18 @@ def check_instruction(current_tok, next_tok):
             current_construction.token_type = 'None'
             current_construction.position = 0
             current_construction.lexeme = 'None'
+
+
+def check_echo(current_tok, next_tok):
+    if current_tok.token_type == 'keyword_echo' or current_construction.token_type == 'keyword_echo':
+        current_construction.token_type = 'keyword_echo'
+
+        if check_construction(current_tok, next_tok) == 'Incorrect_construction' and \
+                current_tok.token_type != 'keyword_echo':
+            raise KeyError
+
+        if check_construction(current_tok, next_tok) == 'End_construction':
+            current_construction.token_type = 'None'
 
 
 def check_for(current_tok, next_tok):
@@ -58,9 +73,7 @@ def check_for(current_tok, next_tok):
                 and current_tok.token_type != 'keyword_for' and current_tok.lexeme != '{':
             raise KeyError
 
-        if check_construction(current_tok, next_tok) == -1:
-            return current_tok.position
-        elif check_construction(current_tok, next_tok) == 'End_construction':
+        if check_construction(current_tok, next_tok) == 'End_construction':
             current_construction.token_type = 'None'
             current_construction.position = 0
 
@@ -77,6 +90,8 @@ def check_construction(curent_tok, next_tok):
         return 'Next'
     elif (curent_tok.lexeme == ';' and next_tok.token_type == 'None') or curent_tok.lexeme == '{':
         return 'End_construction'
+    else:
+        return 'Incorrect_construction'
 
 
 def check_nesting():
