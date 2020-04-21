@@ -6,12 +6,11 @@ from .symbol_table import *
 parser_table = {
     'keyword_for': ['l_paren'],
     'identifier_variable': ['operator_assignment', 'operator_sum', 'operator_substruction', 'operator_multiplication',
-                            'operator_grater', 'operator_less', 'r_paren', 'semi'],
+                            'operator_grater', 'operator_less', 'r_paren', 'semi', 'comma'],
 
-    'l_paren': ['semi', 'identifier_variable', 'string_literal', 'numeric_constant'],
+    'l_paren': ['semi', 'identifier_variable', 'string_literal', 'numeric_constant', 'r_paren'],
     'operator_less': ['numeric_constant', 'identifier_variable'],
     'keyword_if': ['l_paren'],
-    'identifier': ['operator_assignment', 'semi', 'operator_sum', 'identifier_variable'],
     'semi': ['None', 'keyword_for', 'semi', 'r_paren', 'numeric_constant', 'identifier_variable'],
     'numeric_constant': ['semi', 'r_paren', 'operator_sum', 'operator_multiplication'],
     'keyword_<?php': ['None'],
@@ -20,15 +19,16 @@ parser_table = {
     'l_brace': ['None', 'identifier', 'identifier_variable'],
     'operator_grater': ['numeric_constant'],
     'keyword_break': ['semi'],
+    'identifier': ['l_paren'],
     'r_brace': ['None'],
     'operator_sum': ['numeric_constant', 'identifier_variable', 'string_literal'],
     'keyword_?>': ['None'],
     'operator_multiplication': ['identifier_variable', 'numeric_constant', 'string_literal'],
-    'string_literal': ['operator_sum', 'identifier_variable', 'semi', 'operator_multiplication',
-                       'dot', 'comma', 'r_paren'],
-    'keyword_echo': ['l_paren', 'identifier_variable', 'string_literal', 'numeric_constant', 'comma', 'dot'],
+    'string_literal': ['operator_sum', 'semi', 'operator_multiplication', 'dot', 'comma', 'r_paren'],
+    'keyword_echo': ['identifier_variable', 'string_literal', 'numeric_constant'],
     'dot': ['string_literal', 'numeric_constant', 'identifier_variable'],
     'comma': ['string_literal', 'numeric_constant', 'identifier_variable'],
+    'keyword_function': ['identifier'],
 }
 
 ast = {
@@ -56,6 +56,8 @@ def parsing(current_tok, next_tok):
             check_echo(current_tok, next_tok)
 
             check_for(current_tok, next_tok)
+
+            check_function(current_tok, next_tok)
 
             check_instruction(current_tok, next_tok)
 
@@ -90,6 +92,7 @@ def node_creating(current_token, next_token):
 
     craft_symbol_table(str(current_lvl), current_token, next_token)
     # Describe all constructions
+    create_node_function(current_token, next_token, need_lvl)
     create_node_for(current_token, next_token, need_lvl)
     create_node_assign(current_token, next_token, need_lvl)
     create_node_echo(current_token, next_token, need_lvl)

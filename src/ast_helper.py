@@ -23,6 +23,22 @@ def create_node_for(current_token, next_token, need_lvl):
                 need_lvl["increment"] = need_lvl["increment"] + current_token.lexeme + ' '
 
 
+def create_node_function(current_token, next_token, need_lvl):
+    if current_construction.token_type == 'keyword_function':
+        if current_token.token_type == 'keyword_function' and current_construction.token_type == 'keyword_function':
+            need_lvl["children"].append({"kind": current_token.token_type,
+                                         "name": next_token.lexeme,
+                                         "args": "",
+                                         "children": []
+                                         })
+        elif current_token.token_type != 'keyword_function' and current_construction.token_type == 'keyword_function' \
+                and current_token.token_type != 'l_paren'\
+                and current_token.token_type != 'r_paren' \
+                and current_token.token_type != 'comma' \
+                and current_token.token_type != 'identifier':
+            need_lvl["args"] = need_lvl["args"] + current_token.lexeme + ' '
+
+
 def create_node_assign(current_token, next_token, need_lvl):
     if current_construction.token_type == 'assign' and current_construction.position == 0:
         need_lvl["children"].append({"kind": current_construction.token_type,
@@ -43,6 +59,5 @@ def create_node_echo(current_token, next_token, need_lvl):
             "elements": ""
         })
     elif current_construction.token_type == 'keyword_echo' and current_token.token_type != 'keyword_echo' \
-            and current_token.token_type != 'l_paren' and current_token.token_type != 'r_paren'\
-            and current_token.token_type != 'dot':
+            and current_token.token_type != 'comma':
         need_lvl["children"][-1]["elements"] += current_token.lexeme + ' '

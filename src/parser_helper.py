@@ -11,8 +11,9 @@ constructions = {'keyword_for': [['identifier_variable', 'operator_assignment', 
                  'assign': ['identifier_variable', 'operator_assignment', 'numeric_constant', 'operator_sum',
                             'operator_substruction', 'semi', 'string_literal', 'operator_multiplication'],
 
-                 'keyword_echo': ['r_paren', 'l_paren', 'dot', 'identifier_variable', 'numeric_constant',
-                                  'string_literal'],
+                 'keyword_echo': ['identifier_variable', 'numeric_constant', 'string_literal', 'comma'],
+
+                 'keyword_function': ['identifier', 'identifier_variable', 'comma', 'l_paren', 'r_paren'],
 
                  # other constructions
                  }
@@ -54,6 +55,15 @@ def check_echo(current_tok, next_tok):
             current_construction.token_type = 'None'
 
 
+def check_function(current_tok, next_tok):
+    if current_tok.token_type == 'keyword_function' or current_construction.token_type == 'keyword_function':
+        current_construction.token_type = 'keyword_function'
+        print(current_tok.lexeme, next_tok.lexeme, current_construction.token_type, "ggggg") # DEBUGGER)
+
+        if check_construction(current_tok, next_tok) == 'End_construction':
+            current_construction.token_type = 'None'
+
+
 def check_for(current_tok, next_tok):
     if current_tok.token_type == 'keyword_for' or current_construction.token_type == 'keyword_for':
         current_construction.token_type = 'keyword_for'
@@ -67,7 +77,7 @@ def check_for(current_tok, next_tok):
                 == 'End_construction':
             return current_tok.position
 
-        # check expression in for without skin
+        # Проверка конструкций for`а
         if current_tok.token_type not in constructions[current_construction.token_type][current_construction.position] \
                 and current_tok.token_type != 'semi' and current_tok.lexeme != '(' and current_tok.lexeme != ')' \
                 and current_tok.token_type != 'keyword_for' and current_tok.lexeme != '{':

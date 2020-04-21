@@ -1,14 +1,17 @@
 <?PHP
 $var1_lvl_0 = "10";
 
-for ($i = 1; $i < 10; $i = $i + 1) {
-    $var1_lvl_1 = "gg";
-
+function func_name ($arg1, $arg2) {
+    $var1_lvl_above = "10";
     for ($i = 1; $i < 10; $i = $i + 1) {
-        $var1_lvl_2 = $var1_lvl_1 * 10 + "F" + $var4;
+        $var1_lvl_1 = "gg";
+
+        for ($i = 1; $i < 10; $i = $i + 1) {
+            $var1_lvl_2 = $var1_lvl_1 * 10 + "F" + $var4;
+        }
     }
+    $var1_lvl_down = "10";
 }
 
-echo("10". $v);
-$var1_lvl_0 = 10;
+echo "10", $v;
 ?>
