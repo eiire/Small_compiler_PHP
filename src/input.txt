@@ -13,5 +13,7 @@ function func_name ($arg1, $arg2) {
     $var1_lvl_down = "10";
 }
 
+func_name ($arg1, $arg2);
+
 echo "10", $v;
 ?>

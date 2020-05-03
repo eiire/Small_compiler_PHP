@@ -45,7 +45,7 @@ stack_nodes_hierarchy = ['program']  # контроль вложенностей
 def parsing(current_tok, next_tok):
     try:
         if next_tok.token_type in parser_table[current_tok.token_type]:
-            print(current_tok.lexeme, next_tok.lexeme, current_construction.token_type) # DEBUGGER)
+            # print(current_tok.lexeme, next_tok.lexeme, current_construction.token_type) # DEBUGGER)
 
             # dangerous (в php все конструкции, имеющие вложенность, имеют и открывающую скобку => должно работать)
             if current_tok.lexeme == '(' and current_construction.token_type != 'keyword_echo':
@@ -58,6 +58,8 @@ def parsing(current_tok, next_tok):
             check_for(current_tok, next_tok)
 
             check_function(current_tok, next_tok)
+
+            check_call_func(current_tok, next_tok)
 
             check_instruction(current_tok, next_tok)
 
@@ -93,6 +95,7 @@ def node_creating(current_token, next_token):
     craft_symbol_table(str(current_lvl), current_token, next_token)
     # Describe all constructions
     create_node_function(current_token, next_token, need_lvl)
+    create_node_call_func(current_token, next_token, need_lvl)
     create_node_for(current_token, next_token, need_lvl)
     create_node_assign(current_token, next_token, need_lvl)
     create_node_echo(current_token, next_token, need_lvl)

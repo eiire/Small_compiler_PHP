@@ -15,6 +15,8 @@ constructions = {'keyword_for': [['identifier_variable', 'operator_assignment', 
 
                  'keyword_function': ['identifier', 'identifier_variable', 'comma', 'l_paren', 'r_paren'],
 
+                 'call_func': ['l_paren', 'r_paren', 'identifier_variable', 'numeric_constant', 'string_literal']
+
                  # other constructions
                  }
 
@@ -58,7 +60,19 @@ def check_echo(current_tok, next_tok):
 def check_function(current_tok, next_tok):
     if current_tok.token_type == 'keyword_function' or current_construction.token_type == 'keyword_function':
         current_construction.token_type = 'keyword_function'
-        print(current_tok.lexeme, next_tok.lexeme, current_construction.token_type, "ggggg") # DEBUGGER)
+        print(current_tok.token_type, next_tok.token_type, current_tok.position, "checker FUNC <-----")
+
+        if check_construction(current_tok, next_tok) == 'End_construction':
+            current_construction.token_type = 'None'
+
+
+def check_call_func(current_tok, next_tok):
+    if (current_tok.token_type == 'identifier' or current_construction.token_type == 'call_func') \
+            and current_construction.token_type != 'keyword_function':
+        current_construction.token_type = 'call_func'
+
+        if current_tok.token_type != 'r_paren' and next_tok.token_type == 'semi':
+            raise KeyError
 
         if check_construction(current_tok, next_tok) == 'End_construction':
             current_construction.token_type = 'None'

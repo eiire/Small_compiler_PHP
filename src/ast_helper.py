@@ -39,6 +39,21 @@ def create_node_function(current_token, next_token, need_lvl):
             need_lvl["args"] = need_lvl["args"] + current_token.lexeme + ' '
 
 
+def create_node_call_func(current_token, next_token, need_lvl):
+    if current_construction.token_type == 'call_func':
+        if current_token.token_type == 'identifier' and current_construction.token_type == 'call_func':
+            need_lvl["children"].append({"kind": current_token.token_type,
+                                         "name": current_token.lexeme,
+                                         "args": "",
+                                         })
+        elif current_token.token_type != 'identifier' and current_construction.token_type == 'call_func' \
+                and current_token.token_type != 'l_paren' \
+                and current_token.token_type != 'r_paren' \
+                and current_token.token_type != 'comma' \
+                and current_token.token_type != 'identifier':
+            need_lvl["children"][-1]["args"] = need_lvl["children"][-1]["args"] + current_token.lexeme + ' '
+
+
 def create_node_assign(current_token, next_token, need_lvl):
     if current_construction.token_type == 'assign' and current_construction.position == 0:
         need_lvl["children"].append({"kind": current_construction.token_type,
