@@ -1,4 +1,5 @@
 from .parser_helper import *
+from .symbol_table import displace
 
 
 # Describe all constructions
@@ -32,7 +33,7 @@ def create_node_function(current_token, next_token, need_lvl):
                                          "children": []
                                          })
         elif current_token.token_type != 'keyword_function' and current_construction.token_type == 'keyword_function' \
-                and current_token.token_type != 'l_paren'\
+                and current_token.token_type != 'l_paren' \
                 and current_token.token_type != 'r_paren' \
                 and current_token.token_type != 'comma' \
                 and current_token.token_type != 'identifier':
@@ -54,7 +55,12 @@ def create_node_call_func(current_token, next_token, need_lvl):
             need_lvl["children"][-1]["args"] = need_lvl["children"][-1]["args"] + current_token.lexeme + ' '
 
 
+is_assign_expression = False
 def create_node_assign(current_token, next_token, need_lvl):
+    global is_assign_expression
+    if current_token.lexeme == ';':
+        is_assign_expression = False
+
     if current_construction.token_type == 'assign' and current_construction.position == 0:
         need_lvl["children"].append({"kind": current_construction.token_type,
                                      "left": current_token.lexeme,
@@ -63,7 +69,31 @@ def create_node_assign(current_token, next_token, need_lvl):
                                      })
     elif current_construction.token_type == 'assign' and current_construction.position == 1 \
             and current_token.lexeme != '=':
-        need_lvl["children"][-1]["right"] = need_lvl["children"][-1]["right"] + current_token.lexeme + ' '
+
+        if (current_token.token_type == 'numeric_constant' or current_token.token_type == 'identifier_variable') \
+                and (next_token.token_type == 'operator_sum'
+                     or next_token.token_type == 'operator_substruction'
+                     or next_token.token_type == 'operator_multiplication'
+                     or next_token.token_type == 'operator_division'):
+
+            is_assign_expression = True
+            need_lvl["children"][-1]["kind"] = "assign_expression"
+            need_lvl["children"][-1]["right"] = {
+                "kind": next_token.token_type,
+                "left": current_token.lexeme,
+                "right": None
+            }
+
+        if (current_token.token_type == 'operator_sum'
+            or current_token.token_type == 'operator_substruction'
+            or current_token.token_type == 'operator_multiplication'
+            or current_token.token_type == 'operator_division') \
+                and (next_token.token_type == 'numeric_constant' or next_token.token_type == 'identifier_variable') \
+                and need_lvl["children"][-1]["right"]["right"] is None:
+            need_lvl["children"][-1]["right"]["right"] = next_token.lexeme
+
+        if not is_assign_expression:
+            need_lvl["children"][-1]["right"] = need_lvl["children"][-1]["right"] + current_token.lexeme + ' '
 
 
 def create_node_echo(current_token, next_token, need_lvl):

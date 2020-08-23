@@ -12,8 +12,11 @@ counter_ns = {
 
 operation = ""
 
+displace = 0
 
-def craft_symbol_table(current_lvl, current_token, next_token):
+
+def craft_symbol_table(current_lvl, current_token, next_token, need_lvl):
+    global displace
     global counter_ns
     lvls = [lvl for lvl in list(symbol_table.keys())]
 
@@ -36,8 +39,12 @@ def craft_symbol_table(current_lvl, current_token, next_token):
                                  current_construction.lexeme,
                                  operation).rstrip(None))
                     else:
+                        if current_token.token_type == 'identifier_variable':
+                            displace += 4
+                            need_lvl['children'][-1]["displace"] = displace
+
                         symbol_table[current_lvl + ':' + str(len(counter_ns[current_lvl]))]. \
-                            append(current_token.lexeme + ':' + 'NULL')
+                            append(current_token.lexeme + ':' + 'NULL' + ':' + str(displace))
 
                         print(warnings(current_token,
                                  next_token,

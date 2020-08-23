@@ -92,10 +92,11 @@ def node_creating(current_token, next_token):
                 need_lvl = el_on_lvl  # (dict)
                 break
 
-    craft_symbol_table(str(current_lvl), current_token, next_token)
     # Describe all constructions
     create_node_function(current_token, next_token, need_lvl)
     create_node_call_func(current_token, next_token, need_lvl)
     create_node_for(current_token, next_token, need_lvl)
     create_node_assign(current_token, next_token, need_lvl)
     create_node_echo(current_token, next_token, need_lvl)
+
+    craft_symbol_table(str(current_lvl), current_token, next_token, need_lvl)
