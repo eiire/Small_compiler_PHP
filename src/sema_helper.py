@@ -41,7 +41,8 @@ def warnings(current_token, next_token, symbol_table, lvl_and_ns, variable, oper
 def find_var_above(symbol_table, current_token, current_lvl):
     found = False
     # переменная не находится в namespace какой-либо конструкции(lvl)
-    if current_lvl == 0 and current_token.lexeme in cut_type_var(list(symbol_table["0:0"])): return False
+    if current_lvl == 0 and current_token.lexeme in cut_type_var(list(symbol_table["0:0"])):
+        return False
 
     for lvl, variables in symbol_table.items():
         if lvl[:lvl.find(':')] != current_lvl:
@@ -56,9 +57,9 @@ def change_type_main_var(symbol_table, main_var_const, next_token, current_lvl):
     for lvl, variables in symbol_table.items():
         if lvl[:lvl.find(':')] == current_lvl and main_var_const.lexeme in cut_type_var(list(variables)):
             if next_token.lexeme[1:-1 - 1].isdigit():
-                variables[-1] = variables[-1][:variables[-1].find(':')] + ':' + 'numeric_constant'+ ':' + str(displace)
+                variables[-1] = variables[-1][:variables[-1].find(':')] + ':' + 'numeric_constant'  # + ':' + str(displace)
             else:
-                variables[-1] = variables[-1][:variables[-1].find(':')] + ':' + next_token.token_type + ':' + str(displace)
+                variables[-1] = variables[-1][:variables[-1].find(':')] + ':' + next_token.token_type  # + ':' + str(displace)
 
 
 def get_type_var(symbol_table, current_token, current_lvl, type_or_var='TYPE'):

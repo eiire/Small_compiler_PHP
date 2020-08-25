@@ -86,12 +86,13 @@ def check_family_token(token):
     if token == '++': return 'operator_increment'
     if token == '!=': return 'operator_noteq'
     if token == '--': return 'operator_decrement'
-    if token == '===': return 'operator_identical'
+    if token == '==': return 'operator_identical'
     if token.lower() == 'class': return 'keyword_class'
     if token.lower() == 'use': return 'keyword_use'
     if token.lower() == 'namespace': return 'keyword_namespace'
     if token.lower() == 'if': return 'keyword_if'
     if token.lower() == 'for': return 'keyword_for'
+    if token.lower() == 'while': return 'keyword_while'
     if token.lower() == 'main': return 'identifier'
     if token.lower() == 'while': return 'keyword_while'
     if token.lower() == 'function': return 'keyword_function'
@@ -109,7 +110,7 @@ def check_family_token(token):
             return 'unknown'
 
     # check numeric_constant_OCT&simple
-    if token.isdigit() and token.find('0') == 0:
+    if token.isdigit() and token.find('0') == 0 and token != '0':
         if token.find('8') != -1 or token.find('9') != -1:
             return 'unknown'
         return 'numeric_constant_oct'

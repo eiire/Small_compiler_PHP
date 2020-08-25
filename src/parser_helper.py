@@ -15,8 +15,13 @@ constructions = {'keyword_for': [['identifier_variable', 'operator_assignment', 
 
                  'keyword_function': ['identifier', 'identifier_variable', 'comma', 'l_paren', 'r_paren'],
 
-                 'call_func': ['l_paren', 'r_paren', 'identifier_variable', 'numeric_constant', 'string_literal']
+                 'call_func': ['l_paren', 'r_paren', 'identifier_variable', 'numeric_constant', 'string_literal'],
 
+                 'keyword_if': ['r_paren', 'l_paren', 'operator_grater', 'operator_less', 'identifier_variable',
+                                'numeric_constant', 'operator_identical'],
+
+                 'keyword_while': ['r_paren', 'l_paren', 'operator_grater', 'operator_less', 'identifier_variable',
+                                   'numeric_constant', 'operator_identical'],
                  # other constructions
                  }
 
@@ -30,7 +35,7 @@ def check_instruction(current_tok, next_tok):
             or current_construction.token_type == 'assign':
         current_construction.token_type = 'assign'
 
-        if next_tok.token_type == 'operator_assignment': current_construction.lexeme = current_tok.lexeme # для main VAR
+        if next_tok.token_type == 'operator_assignment': current_construction.lexeme = current_tok.lexeme  # для main VAR
 
         if check_construction(current_tok, next_tok) == 'Incorrect_construction':
             raise KeyError
@@ -100,6 +105,22 @@ def check_for(current_tok, next_tok):
         if check_construction(current_tok, next_tok) == 'End_construction':
             current_construction.token_type = 'None'
             current_construction.position = 0
+
+
+def check_if(current_tok, next_tok):
+    if current_tok.token_type == 'keyword_if' or current_construction.token_type == 'keyword_if':
+        current_construction.token_type = 'keyword_if'
+
+        if check_construction(current_tok, next_tok) == 'End_construction':
+            current_construction.token_type = 'None'
+
+
+def check_while(current_tok, next_tok):
+    if current_tok.token_type == 'keyword_while' or current_construction.token_type == 'keyword_while':
+        current_construction.token_type = 'keyword_while'
+
+        if check_construction(current_tok, next_tok) == 'End_construction':
+            current_construction.token_type = 'None'
 
 
 def check_php(current_tok):

@@ -1,12 +1,12 @@
-from .parser_helper import *
 from .ast_helper import *
 from .symbol_table import *
 
 # общая таблица(общий случай), она дополняется вспомогательной для конструкций из помощника
 parser_table = {
     'keyword_for': ['l_paren'],
+    'keyword_while': ['l_paren'],
     'identifier_variable': ['operator_assignment', 'operator_sum', 'operator_substruction', 'operator_multiplication',
-                            'operator_grater', 'operator_less', 'r_paren', 'semi', 'comma'],
+                            'operator_grater', 'operator_less', 'r_paren', 'semi', 'comma', 'operator_identical'],
 
     'l_paren': ['semi', 'identifier_variable', 'string_literal', 'numeric_constant', 'r_paren'],
     'operator_less': ['numeric_constant', 'identifier_variable'],
@@ -18,10 +18,12 @@ parser_table = {
     'r_paren': ['semi', 'l_brace', 'r_brace'],
     'l_brace': ['None', 'identifier', 'identifier_variable'],
     'operator_grater': ['numeric_constant'],
+    'operator_identical': ['numeric_constant', 'identifier_variable', 'string_literal'],
     'keyword_break': ['semi'],
     'identifier': ['l_paren'],
     'r_brace': ['None'],
     'operator_sum': ['numeric_constant', 'identifier_variable', 'string_literal'],
+    'operator_substruction': ['numeric_constant', 'identifier_variable'],
     'keyword_?>': ['None'],
     'operator_multiplication': ['identifier_variable', 'numeric_constant', 'string_literal'],
     'string_literal': ['operator_sum', 'semi', 'operator_multiplication', 'dot', 'comma', 'r_paren'],
@@ -41,6 +43,8 @@ ast = {
 # Парсер использует current_costruction из parser_helper для для поддержания вложенностей и определения, что проверяется
 stack_nodes_hierarchy = ['program']  # контроль вложенностей
 
+displace = 0
+
 
 def parsing(current_tok, next_tok):
     try:
@@ -55,17 +59,22 @@ def parsing(current_tok, next_tok):
 
             check_echo(current_tok, next_tok)
 
+            # This is`t implemented in assembler
             check_for(current_tok, next_tok)
+
+            check_while(current_tok, next_tok)
+
+            check_if(current_tok, next_tok)
 
             check_function(current_tok, next_tok)
 
+            # This is`t implemented in assembler
             check_call_func(current_tok, next_tok)
 
             check_instruction(current_tok, next_tok)
 
             # создасться узел в зависимсти от того, какая конструкция была проверена
             node_creating(current_tok, next_tok)
-
             #  exit from namespace
             if current_tok.lexeme == '}':
                 stack_nodes_hierarchy.pop()
@@ -82,21 +91,36 @@ def parsing(current_tok, next_tok):
 
 # MAIN FUNC for AST
 def node_creating(current_token, next_token):
-    need_lvl = ast
+    current_node = ast
     current_lvl = 0  # for symbol table
     # проход по namespace
     for construction in stack_nodes_hierarchy:
-        for el_on_lvl in reversed(need_lvl["children"]):
+        for el_on_lvl in reversed(current_node["children"]):
             if el_on_lvl["kind"] == construction:
                 current_lvl += 1
-                need_lvl = el_on_lvl  # (dict)
+                current_node = el_on_lvl  # (dict)
                 break
 
     # Describe all constructions
-    create_node_function(current_token, next_token, need_lvl)
-    create_node_call_func(current_token, next_token, need_lvl)
-    create_node_for(current_token, next_token, need_lvl)
-    create_node_assign(current_token, next_token, need_lvl)
-    create_node_echo(current_token, next_token, need_lvl)
+    create_node_function(current_token, next_token, current_node)
+    create_node_call_func(current_token, next_token, current_node)
+    create_node_for(current_token, next_token, current_node)
+    create_node_assign(current_token, next_token, current_node)
+    create_node_echo(current_token, next_token, current_node)
+    create_node_if(current_token, next_token, current_node)
+    create_node_while(current_token, next_token, current_node)
 
-    craft_symbol_table(str(current_lvl), current_token, next_token, need_lvl)
+    # The function will see if the variable has been defined in the correct scope based on the symbol table..
+    arrange_variables_in_memory(current_node, current_lvl, current_token, next_token)
+
+    # ..so the update comes after
+    craft_symbol_table(str(current_lvl), current_token, next_token)
+
+
+def arrange_variables_in_memory(current_node, current_lvl, current_token, next_token):
+    global displace
+
+    if current_token.token_type == 'identifier_variable' and next_token.token_type == 'operator_assignment':
+        if not find_var_above(symbol_table, current_token, current_lvl):
+            displace += 4
+        current_node['children'][-1]["displace"] = displace

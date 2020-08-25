@@ -1,5 +1,4 @@
 from .parser_helper import *
-from .symbol_table import displace
 
 
 # Describe all constructions
@@ -22,6 +21,44 @@ def create_node_for(current_token, next_token, need_lvl):
         elif current_construction.token_type == 'keyword_for' and current_construction.position == 2:
             if current_token.lexeme != '(' and current_token.lexeme != ';' and current_token.lexeme != ')':
                 need_lvl["increment"] = need_lvl["increment"] + current_token.lexeme + ' '
+
+
+def create_node_if(current_token, next_token, need_lvl):
+    if current_construction.token_type == 'keyword_if':
+        if current_token.token_type == 'keyword_if' and current_construction.token_type == 'keyword_if':
+            need_lvl["children"].append({"kind": current_token.token_type,
+                                         "condition": {},
+                                         "position": current_token.position,
+                                         "children": []
+                                         })
+
+        if current_token.token_type in ['identifier_variable', 'numeric_constant'] and next_token.token_type \
+                in ['operator_identical', 'operator_less', 'operator_grater', 'operator_noteq']:
+            need_lvl["condition"]["left"] = current_token.lexeme
+            need_lvl["condition"]["op"] = next_token.lexeme
+
+        if next_token.token_type in ['identifier_variable', 'numeric_constant'] and current_token.token_type \
+                in ['operator_identical', 'operator_less', 'operator_grater', 'operator_noteq']:
+            need_lvl["condition"]["right"] = next_token.lexeme
+
+
+def create_node_while(current_token, next_token, need_lvl):
+    if current_construction.token_type == 'keyword_while':
+        if current_token.token_type == 'keyword_while' and current_construction.token_type == 'keyword_while':
+            need_lvl["children"].append({"kind": current_token.token_type,
+                                         "condition": {},
+                                         "position": current_token.position,
+                                         "children": []
+                                         })
+
+        if current_token.token_type in ['identifier_variable', 'numeric_constant'] and next_token.token_type \
+                in ['operator_identical', 'operator_less', 'operator_grater', 'operator_noteq']:
+            need_lvl["condition"]["left"] = current_token.lexeme
+            need_lvl["condition"]["op"] = next_token.lexeme
+
+        if next_token.token_type in ['identifier_variable', 'numeric_constant'] and current_token.token_type \
+                in ['operator_identical', 'operator_less', 'operator_grater', 'operator_noteq']:
+            need_lvl["condition"]["right"] = next_token.lexeme
 
 
 def create_node_function(current_token, next_token, need_lvl):
@@ -56,6 +93,8 @@ def create_node_call_func(current_token, next_token, need_lvl):
 
 
 is_assign_expression = False
+
+
 def create_node_assign(current_token, next_token, need_lvl):
     global is_assign_expression
     if current_token.lexeme == ';':
@@ -75,7 +114,6 @@ def create_node_assign(current_token, next_token, need_lvl):
                      or next_token.token_type == 'operator_substruction'
                      or next_token.token_type == 'operator_multiplication'
                      or next_token.token_type == 'operator_division'):
-
             is_assign_expression = True
             need_lvl["children"][-1]["kind"] = "assign_expression"
             need_lvl["children"][-1]["right"] = {
