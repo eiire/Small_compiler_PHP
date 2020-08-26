@@ -23,13 +23,14 @@ def create_node_for(current_token, next_token, need_lvl):
                 need_lvl["increment"] = need_lvl["increment"] + current_token.lexeme + ' '
 
 
-def create_node_if(current_token, next_token, need_lvl):
+def create_node_if(current_token, next_token, need_lvl, test):
     if current_construction.token_type == 'keyword_if':
         if current_token.token_type == 'keyword_if' and current_construction.token_type == 'keyword_if':
             need_lvl["children"].append({"kind": current_token.token_type,
                                          "condition": {},
                                          "position": current_token.position,
-                                         "children": []
+                                         "children": [],
+                                         "parent": test
                                          })
 
         if current_token.token_type in ['identifier_variable', 'numeric_constant'] and next_token.token_type \
@@ -95,7 +96,7 @@ def create_node_call_func(current_token, next_token, need_lvl):
 is_assign_expression = False
 
 
-def create_node_assign(current_token, next_token, need_lvl):
+def create_node_assign(current_token, next_token, need_lvl, test):
     global is_assign_expression
     if current_token.lexeme == ';':
         is_assign_expression = False
@@ -105,6 +106,7 @@ def create_node_assign(current_token, next_token, need_lvl):
                                      "left": current_token.lexeme,
                                      "right": "",
                                      "position": current_token.position,
+                                     "parent": test
                                      })
     elif current_construction.token_type == 'assign' and current_construction.position == 1 \
             and current_token.lexeme != '=':

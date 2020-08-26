@@ -14,7 +14,6 @@ operation = ""
 
 
 def craft_symbol_table(current_lvl, current_token, next_token):
-    global displace
     global counter_ns
     lvls = [lvl for lvl in list(symbol_table.keys())]
 

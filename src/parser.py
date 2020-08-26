@@ -1,5 +1,7 @@
 from .ast_helper import *
 from .symbol_table import *
+from .assembly import displace
+import copy
 
 # общая таблица(общий случай), она дополняется вспомогательной для конструкций из помощника
 parser_table = {
@@ -42,8 +44,6 @@ ast = {
 
 # Парсер использует current_costruction из parser_helper для для поддержания вложенностей и определения, что проверяется
 stack_nodes_hierarchy = ['program']  # контроль вложенностей
-
-displace = 0
 
 
 def parsing(current_tok, next_tok):
@@ -93,21 +93,24 @@ def parsing(current_tok, next_tok):
 def node_creating(current_token, next_token):
     current_node = ast
     current_lvl = 0  # for symbol table
+    test = None
     # проход по namespace
     for construction in stack_nodes_hierarchy:
         for el_on_lvl in reversed(current_node["children"]):
             if el_on_lvl["kind"] == construction:
+                test = copy.deepcopy(current_node["children"])  #[e.copy() for e in current_node["children"]]
                 current_lvl += 1
                 current_node = el_on_lvl  # (dict)
                 break
 
+    # print(test, "HERE")
     # Describe all constructions
     create_node_function(current_token, next_token, current_node)
     create_node_call_func(current_token, next_token, current_node)
     create_node_for(current_token, next_token, current_node)
-    create_node_assign(current_token, next_token, current_node)
+    create_node_assign(current_token, next_token, current_node, test)
     create_node_echo(current_token, next_token, current_node)
-    create_node_if(current_token, next_token, current_node)
+    create_node_if(current_token, next_token, current_node, test)
     create_node_while(current_token, next_token, current_node)
 
     # The function will see if the variable has been defined in the correct scope based on the symbol table..
@@ -122,5 +125,36 @@ def arrange_variables_in_memory(current_node, current_lvl, current_token, next_t
 
     if current_token.token_type == 'identifier_variable' and next_token.token_type == 'operator_assignment':
         if not find_var_above(symbol_table, current_token, current_lvl):
-            displace += 4
-        current_node['children'][-1]["displace"] = displace
+            # special case of variable search function, vars in global scope
+            if current_token.lexeme not in cut_type_var(list(symbol_table["0:0"])):
+                displace += 4
+                print(displace, current_token.lexeme)
+
+        current_node['children'][-1]["displace"] = find_displace_for_var(current_token)
+
+
+def find_displace_for_var(current_token):
+    global displace
+    finder_displace = None  # displace variable
+    flag = False
+    children = ast["children"]
+    print(children)
+    for temp in children:
+        if temp.get("left") == current_token.lexeme:
+            if temp.get("displace") is None:
+                temp["displace"] = displace
+            finder_displace = temp["displace"]
+            flag = True
+            break
+    parent = children[-1]["parent"]
+    # print(parent)
+    while parent is not None and flag is False:
+        for temp in parent:
+            # print(temp, current_token.lexeme)
+            if temp.get("left") == current_token.lexeme:
+                finder_displace = temp["displace"]
+                flag = True
+                break
+        parent = parent[-1]["parent"]
+
+    return finder_displace
