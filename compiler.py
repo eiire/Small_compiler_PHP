@@ -6,8 +6,6 @@ import json
 
 
 def start_compiler():
-    global displace
-
     file = open("src/input.txt", 'r')
     file_res = open("build/result.txt", 'w')
 
@@ -52,13 +50,14 @@ def start_compiler():
                                 # print(parsing(tok, next_tok))
                                 return print('ERROR in: ', tok.position)
 
-
                     except StopIteration:
                         # пустая строка, вызов парсера с предыдущими значениями токена
                         none_tok = Token('None', 'None', 'end_str')
                         if parsing(tok, none_tok) != 'Next': return print('ERROR in: ', tok.position)
             if check_nesting() != 0:
                 print('error: expected ‘}’ at end of input')
+
+            print(json.dumps(ast, indent=4))
 
         elif sys.argv[1] == "--dump-asm":
             line_number = 0
@@ -94,7 +93,7 @@ def start_compiler():
                 print('error: expected ‘}’ at end of input')
 
             current_node = None
-            asm_container = jopafunction(ast['children'], None)
+            asm_container, displace = generate_assebler(ast['childs'])
 
             global intro
             intro += f"{displace}\n" + asm_container
@@ -113,5 +112,4 @@ with open("build/symbol_table.json", "w", encoding="utf-8") as file:
     json.dump(symbol_table, file, indent=4)
 
 with open("build/AST.json", "w", encoding="utf-8") as file:
-    print(ast)
     json.dump(ast, file, indent=4)

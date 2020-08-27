@@ -9,7 +9,8 @@ constructions = {'keyword_for': [['identifier_variable', 'operator_assignment', 
                                  ['identifier_variable', 'operator_assignment', 'operator_sum', 'numeric_constant']],
 
                  'assign': ['identifier_variable', 'operator_assignment', 'numeric_constant', 'operator_sum',
-                            'operator_substruction', 'semi', 'string_literal', 'operator_multiplication'],
+                            'operator_substruction', 'semi', 'string_literal', 'operator_multiplication',
+                            'operator_mod'],
 
                  'keyword_echo': ['identifier_variable', 'numeric_constant', 'string_literal', 'comma'],
 
@@ -22,6 +23,9 @@ constructions = {'keyword_for': [['identifier_variable', 'operator_assignment', 
 
                  'keyword_while': ['r_paren', 'l_paren', 'operator_grater', 'operator_less', 'identifier_variable',
                                    'numeric_constant', 'operator_identical'],
+
+                 'keyword_break': []
+
                  # other constructions
                  }
 
@@ -65,7 +69,6 @@ def check_echo(current_tok, next_tok):
 def check_function(current_tok, next_tok):
     if current_tok.token_type == 'keyword_function' or current_construction.token_type == 'keyword_function':
         current_construction.token_type = 'keyword_function'
-        print(current_tok.token_type, next_tok.token_type, current_tok.position, "checker FUNC <-----")
 
         if check_construction(current_tok, next_tok) == 'End_construction':
             current_construction.token_type = 'None'
@@ -113,6 +116,16 @@ def check_if(current_tok, next_tok):
 
         if check_construction(current_tok, next_tok) == 'End_construction':
             current_construction.token_type = 'None'
+            current_construction.position = 0
+
+
+def check_keyword_break(current_tok, next_tok):
+    if current_tok.token_type == 'keyword_break' or current_construction.token_type == 'keyword_break':
+        current_construction.token_type = 'keyword_break'
+
+        if check_construction(current_tok, next_tok) == 'End_construction':
+            current_construction.token_type = 'None'
+            current_construction.position = 0
 
 
 def check_while(current_tok, next_tok):
@@ -121,6 +134,7 @@ def check_while(current_tok, next_tok):
 
         if check_construction(current_tok, next_tok) == 'End_construction':
             current_construction.token_type = 'None'
+            current_construction.position = 0
 
 
 def check_php(current_tok):

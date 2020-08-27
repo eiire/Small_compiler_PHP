@@ -8,24 +8,27 @@ parser_table = {
     'keyword_for': ['l_paren'],
     'keyword_while': ['l_paren'],
     'identifier_variable': ['operator_assignment', 'operator_sum', 'operator_substruction', 'operator_multiplication',
-                            'operator_grater', 'operator_less', 'r_paren', 'semi', 'comma', 'operator_identical'],
+                            'operator_grater', 'operator_less', 'r_paren', 'semi', 'comma', 'operator_identical',
+                            'operator_noteq', 'operator_mod'],
 
     'l_paren': ['semi', 'identifier_variable', 'string_literal', 'numeric_constant', 'r_paren'],
-    'operator_less': ['numeric_constant', 'identifier_variable'],
     'keyword_if': ['l_paren'],
     'semi': ['None', 'keyword_for', 'semi', 'r_paren', 'numeric_constant', 'identifier_variable'],
-    'numeric_constant': ['semi', 'r_paren', 'operator_sum', 'operator_multiplication'],
+    'numeric_constant': ['semi', 'r_paren', 'operator_sum', 'operator_multiplication', 'operator_mod'],
     'keyword_<?php': ['None'],
     'operator_assignment': ['numeric_constant', 'identifier_variable', 'string_literal'],
     'r_paren': ['semi', 'l_brace', 'r_brace'],
     'l_brace': ['None', 'identifier', 'identifier_variable'],
     'operator_grater': ['numeric_constant'],
+    'operator_less': ['numeric_constant', 'identifier_variable'],
+    'operator_noteq':['numeric_constant', 'identifier_variable', 'string_literal'],
     'operator_identical': ['numeric_constant', 'identifier_variable', 'string_literal'],
     'keyword_break': ['semi'],
     'identifier': ['l_paren'],
     'r_brace': ['None'],
     'operator_sum': ['numeric_constant', 'identifier_variable', 'string_literal'],
     'operator_substruction': ['numeric_constant', 'identifier_variable'],
+    'operator_mod': ['numeric_constant', 'identifier_variable'],
     'keyword_?>': ['None'],
     'operator_multiplication': ['identifier_variable', 'numeric_constant', 'string_literal'],
     'string_literal': ['operator_sum', 'semi', 'operator_multiplication', 'dot', 'comma', 'r_paren'],
@@ -37,7 +40,7 @@ parser_table = {
 
 ast = {
     "kind": "program",
-    "children": [
+    "childs": [
         # array of nodes
     ]
 }
@@ -66,6 +69,8 @@ def parsing(current_tok, next_tok):
 
             check_if(current_tok, next_tok)
 
+            check_keyword_break(current_tok, next_tok)
+
             check_function(current_tok, next_tok)
 
             # This is`t implemented in assembler
@@ -93,25 +98,25 @@ def parsing(current_tok, next_tok):
 def node_creating(current_token, next_token):
     current_node = ast
     current_lvl = 0  # for symbol table
-    test = None
+    cur_grandpa_childrens = None
     # проход по namespace
     for construction in stack_nodes_hierarchy:
-        for el_on_lvl in reversed(current_node["children"]):
-            if el_on_lvl["kind"] == construction:
-                test = copy.deepcopy(current_node["children"])  #[e.copy() for e in current_node["children"]]
+        for node_on_lvl in reversed(current_node["childs"]):
+            if node_on_lvl["kind"] == construction:
+                cur_grandpa_childrens = copy.deepcopy(current_node["childs"])  #[e.copy() for e in current_node["childs"]]
                 current_lvl += 1
-                current_node = el_on_lvl  # (dict)
+                current_node = node_on_lvl
                 break
 
-    # print(test, "HERE")
     # Describe all constructions
     create_node_function(current_token, next_token, current_node)
     create_node_call_func(current_token, next_token, current_node)
     create_node_for(current_token, next_token, current_node)
-    create_node_assign(current_token, next_token, current_node, test)
-    create_node_echo(current_token, next_token, current_node)
-    create_node_if(current_token, next_token, current_node, test)
-    create_node_while(current_token, next_token, current_node)
+    create_node_assign(current_token, next_token, current_node, cur_grandpa_childrens)
+    create_node_echo(current_token, next_token, current_node, cur_grandpa_childrens)
+    create_node_if(current_token, next_token, current_node, cur_grandpa_childrens)
+    create_node_while(current_token, next_token, current_node, cur_grandpa_childrens)
+    create_break(current_token, next_token, current_node, cur_grandpa_childrens)
 
     # The function will see if the variable has been defined in the correct scope based on the symbol table..
     arrange_variables_in_memory(current_node, current_lvl, current_token, next_token)
@@ -128,25 +133,23 @@ def arrange_variables_in_memory(current_node, current_lvl, current_token, next_t
             # special case of variable search function, vars in global scope
             if current_token.lexeme not in cut_type_var(list(symbol_table["0:0"])):
                 displace += 4
-                print(displace, current_token.lexeme)
 
-        current_node['children'][-1]["displace"] = find_displace_for_var(current_token)
+        current_node['childs'][-1]["displace"] = find_displace_for_var(current_token)
 
 
 def find_displace_for_var(current_token):
     global displace
-    finder_displace = None  # displace variable
+    finder_displace = displace  # displace variable
     flag = False
-    children = ast["children"]
-    print(children)
-    for temp in children:
+    childs = ast["childs"]
+    for temp in childs:
         if temp.get("left") == current_token.lexeme:
             if temp.get("displace") is None:
                 temp["displace"] = displace
             finder_displace = temp["displace"]
             flag = True
             break
-    parent = children[-1]["parent"]
+    parent = childs[-1].get("parent")
     # print(parent)
     while parent is not None and flag is False:
         for temp in parent:
