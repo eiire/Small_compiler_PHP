@@ -27,8 +27,12 @@ def craft_symbol_table(current_lvl, current_token, next_token):
                     and current_token.lexeme \
                     not in cut_type_var(list(symbol_table[current_lvl + ':' + str(len(counter_ns[current_lvl]))])):
 
+                find_fl = False
+                for var_in_ns in range(current_lvl):
+                    find_fl = find_var_above(symbol_table, current_token, current_lvl)  #
 
-                if not find_var_above(symbol_table, current_token, current_lvl):
+                if not find_var_above(symbol_table, current_token, current_lvl) and not find_fl:
+
                     if current_token.token_type == 'string_literal' or current_token.token_type == 'numeric_constant':
                         print(warnings(current_token,
                                  next_token,
@@ -55,7 +59,6 @@ def craft_symbol_table(current_lvl, current_token, next_token):
                              operation).rstrip(None))
             elif current_token.token_type == 'operator_assignment' and \
                     (next_token.token_type == 'string_literal' or next_token.token_type == 'numeric_constant'):
-                # print('CHO')
                 change_type_main_var(symbol_table, current_construction, next_token, current_lvl)
 
         elif current_lvl not in lvls:
@@ -75,7 +78,7 @@ def check_for_identifier(current_token, next_token):
     global operation
     # Выяснить совершаемую операцию ДО определения типа переменной
     if current_token.token_type in ['operator_sum', 'operator_multiplication', 'operator_substruction',
-                                    'operator_division']:
+                                    'operator_division', 'operator_mod']:
         operation = current_token.token_type
 
     if (current_token.token_type == 'identifier_variable'

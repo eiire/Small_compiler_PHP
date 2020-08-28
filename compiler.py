@@ -1,16 +1,16 @@
-import sys
 from src.lexer import *
 from src.parser import *
 from src.assembly import *
 import json
+import sys
+import os
 
 
 def start_compiler():
-    file = open("src/input.txt", 'r')
-    file_res = open("build/result.txt", 'w')
-
+    file = open("program.txt", 'r')
     if len(sys.argv) == 2:
         if sys.argv[1] == "--dump-tokens":
+            file_res = open("build/tokens.txt", 'w')
             line_number = 0
             for line in file:
                 line_number += 1
@@ -18,11 +18,13 @@ def start_compiler():
                     # Generator_tokens --> lexer.tokens_in_line
                     # slize for thist # beginning left
                     for tok in tokens_in_line(line[0:check_thist_heshteg_after_cov(line) - 1], line_number):
-                        file_res.write(tok.position + " \t" + tok.lexeme + ' ' + "#" + tok.token_type + '\n')
+                        file_res.write(tok.position + ' ' + tok.lexeme + ' ' + "#" + tok.token_type + '\n')
                 else:
                     # slize for thist # beginning left
                     for tok in tokens_in_line(line.partition('#')[0], line_number):
-                        file_res.write(tok.position + "\t" + tok.lexeme + ' ' + "#" + tok.token_type + '\n')
+                        file_res.write(tok.position + ' ' + tok.lexeme + ' ' + "#" + tok.token_type + '\n')
+
+            file_res.close()
 
         elif sys.argv[1] == "--dump-ast":
             line_number = 0
@@ -96,12 +98,17 @@ def start_compiler():
             asm_container, displace = generate_assebler(ast['childs'])
 
             global intro
-            intro += f"{displace}\n" + asm_container
+            intro += f"" + asm_container
             intro += "nop\npop     rbp \nret\n"
             print(intro)
 
+            with open("build/res_assembler.s", "w") as file_output:
+                file_output.write(intro)
+                file_output.close()
+            os.system(f"gcc -Wall -no-pie build/res_assembler.s -o program")
+
         file.close()
-        file_res.close()
+
     else:
         return -1
 

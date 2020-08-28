@@ -5,7 +5,7 @@ import copy
 
 # общая таблица(общий случай), она дополняется вспомогательной для конструкций из помощника
 parser_table = {
-    'keyword_for': ['l_paren'],
+    # 'keyword_for': ['l_paren'],
     'keyword_while': ['l_paren'],
     'identifier_variable': ['operator_assignment', 'operator_sum', 'operator_substruction', 'operator_multiplication',
                             'operator_grater', 'operator_less', 'r_paren', 'semi', 'comma', 'operator_identical',
@@ -19,7 +19,7 @@ parser_table = {
     'operator_assignment': ['numeric_constant', 'identifier_variable', 'string_literal'],
     'r_paren': ['semi', 'l_brace', 'r_brace'],
     'l_brace': ['None', 'identifier', 'identifier_variable'],
-    'operator_grater': ['numeric_constant'],
+    'operator_grater': ['numeric_constant', 'identifier_variable'],
     'operator_less': ['numeric_constant', 'identifier_variable'],
     'operator_noteq':['numeric_constant', 'identifier_variable', 'string_literal'],
     'operator_identical': ['numeric_constant', 'identifier_variable', 'string_literal'],
@@ -35,7 +35,7 @@ parser_table = {
     'keyword_echo': ['identifier_variable', 'string_literal', 'numeric_constant'],
     'dot': ['string_literal', 'numeric_constant', 'identifier_variable'],
     'comma': ['string_literal', 'numeric_constant', 'identifier_variable'],
-    'keyword_function': ['identifier'],
+    # 'keyword_function': ['identifier'],
 }
 
 ast = {
@@ -62,8 +62,7 @@ def parsing(current_tok, next_tok):
 
             check_echo(current_tok, next_tok)
 
-            # This is`t implemented in assembler
-            check_for(current_tok, next_tok)
+            # check_for(current_tok, next_tok)
 
             check_while(current_tok, next_tok)
 
@@ -71,10 +70,9 @@ def parsing(current_tok, next_tok):
 
             check_keyword_break(current_tok, next_tok)
 
-            check_function(current_tok, next_tok)
+            # check_function(current_tok, next_tok)
 
-            # This is`t implemented in assembler
-            check_call_func(current_tok, next_tok)
+            # check_call_func(current_tok, next_tok)
 
             check_instruction(current_tok, next_tok)
 
@@ -109,14 +107,14 @@ def node_creating(current_token, next_token):
                 break
 
     # Describe all constructions
-    create_node_function(current_token, next_token, current_node)
-    create_node_call_func(current_token, next_token, current_node)
-    create_node_for(current_token, next_token, current_node)
     create_node_assign(current_token, next_token, current_node, cur_grandpa_childrens)
     create_node_echo(current_token, next_token, current_node, cur_grandpa_childrens)
     create_node_if(current_token, next_token, current_node, cur_grandpa_childrens)
     create_node_while(current_token, next_token, current_node, cur_grandpa_childrens)
     create_break(current_token, next_token, current_node, cur_grandpa_childrens)
+    # create_node_function(current_token, next_token, current_node, cur_grandpa_childrens)
+    # create_node_call_func(current_token, next_token, current_node, cur_grandpa_childrens)
+    # create_node_for(current_token, next_token, current_node, cur_grandpa_childrens)
 
     # The function will see if the variable has been defined in the correct scope based on the symbol table..
     arrange_variables_in_memory(current_node, current_lvl, current_token, next_token)

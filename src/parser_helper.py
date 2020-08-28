@@ -3,31 +3,32 @@ from .lexer import Token
 # Ключевой момент для определения, что в данный момент проверяется
 current_construction = Token('None', 'None', 0)
 
-constructions = {'keyword_for': [['identifier_variable', 'operator_assignment', 'numeric_constant'],
-                                 ['r_paren', 'l_paren', 'operator_grater', 'operator_less', 'identifier_variable',
-                                  'numeric_constant'],
-                                 ['identifier_variable', 'operator_assignment', 'operator_sum', 'numeric_constant']],
+constructions = {
+    'assign': ['identifier_variable', 'operator_assignment', 'numeric_constant', 'operator_sum',
+               'operator_substruction', 'semi', 'string_literal', 'operator_multiplication',
+               'operator_mod'],
 
-                 'assign': ['identifier_variable', 'operator_assignment', 'numeric_constant', 'operator_sum',
-                            'operator_substruction', 'semi', 'string_literal', 'operator_multiplication',
-                            'operator_mod'],
+    'keyword_echo': ['identifier_variable', 'numeric_constant', 'string_literal', 'comma'],
 
-                 'keyword_echo': ['identifier_variable', 'numeric_constant', 'string_literal', 'comma'],
+    # 'keyword_function': ['identifier', 'identifier_variable', 'comma', 'l_paren', 'r_paren'],
 
-                 'keyword_function': ['identifier', 'identifier_variable', 'comma', 'l_paren', 'r_paren'],
+    'call_func': ['l_paren', 'r_paren', 'identifier_variable', 'numeric_constant', 'string_literal'],
 
-                 'call_func': ['l_paren', 'r_paren', 'identifier_variable', 'numeric_constant', 'string_literal'],
+    'keyword_if': ['r_paren', 'l_paren', 'operator_grater', 'operator_less', 'identifier_variable',
+                   'numeric_constant', 'operator_identical'],
 
-                 'keyword_if': ['r_paren', 'l_paren', 'operator_grater', 'operator_less', 'identifier_variable',
-                                'numeric_constant', 'operator_identical'],
+    'keyword_while': ['r_paren', 'l_paren', 'operator_grater', 'operator_less', 'identifier_variable',
+                      'numeric_constant', 'operator_identical'],
 
-                 'keyword_while': ['r_paren', 'l_paren', 'operator_grater', 'operator_less', 'identifier_variable',
-                                   'numeric_constant', 'operator_identical'],
+    'keyword_break': [],
 
-                 'keyword_break': []
+    # 'keyword_for': [['identifier_variable', 'operator_assignment', 'numeric_constant'],
+    #                 ['r_paren', 'l_paren', 'operator_grater', 'operator_less', 'identifier_variable',
+    #                  'numeric_constant'],
+    #                 ['identifier_variable', 'operator_assignment', 'operator_sum', 'numeric_constant']],
 
-                 # other constructions
-                 }
+    # other constructions
+}
 
 nesting_stack = []
 

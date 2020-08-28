@@ -1,5 +1,5 @@
 intro = '.intel_syntax noprefix\n.global main\n.LC0:\n.string \"%d\\n\"\nmain:\npush rbp\n' \
-        'mov rbp, rsp\nsub rsp, '
+        'mov rbp, rsp\n'
 
 marker = 0
 marker_break = -1
@@ -39,24 +39,57 @@ def generate_assebler(childs):
                 "operator_sum": "add ",
                 "operator_substruction": "sub ",
                 "operator_multiplication": "imul ",
-                "operator_division": "idiv "
+                "operator_division": "idiv ",
+                "operator_mod": "idiv "
             }
+            cdq = ""
+            if node["right"]["kind"] == "operator_division" or node["right"]["kind"] == "operator_mod":
+                cdq = "cdq\n"
             if not node["right"]["left"].isdigit() and not node["right"]["right"].isdigit():  # a + b
                 temp = None
                 right_1 = node["right"]["left"]
                 right_2 = node["right"]["right"]
                 displace_right_1 = None  # variable
                 displace_right_2 = None
+                found = False
                 for temp in childs:
-                    if temp["left"] == right_1:
+                    if temp.get("left") == right_1:
                         displace_right_1 = temp["displace"]
+                        found = True
                         break
-
+                cur_grandpa_childs = node["cur_grandpa_childs"]
+                while cur_grandpa_childs is not None and found is False:
+                    for temp in cur_grandpa_childs:
+                        if temp.get("left") == right_1:
+                            displace_right_1 = temp["displace"]
+                            found = True
+                            break
+                    cur_grandpa_childs = cur_grandpa_childs[-1].get("cur_grandpa_childs")
+                    
+                found = False
                 for temp in childs:
-                    if temp["left"] == right_2:
+                    if temp.get("left") == right_2:
                         displace_right_2 = temp["displace"]
+                        found = True
                         break
-                asm_container += f"mov edx, DWORD PTR [rbp-{displace_right_1}]\nmov eax, DWORD PTR [rbp-{displace_right_2}]\n" + op[node["right"]["kind"]] + f"eax, edx\nmov DWORD PTR [rbp-{node['displace']}], eax\n"
+                cur_grandpa_childs = node["cur_grandpa_childs"]
+                while cur_grandpa_childs is not None and found is False:
+                    for temp in cur_grandpa_childs:
+                        if temp.get("left") == right_2:
+                            displace_right_2 = temp["displace"]
+                            found = True
+                            break
+                    cur_grandpa_childs = cur_grandpa_childs[-1].get("cur_grandpa_childs")
+                if node["right"]["kind"] != "operator_mod":
+                    if node["right"]["kind"] == "operator_division":
+                        asm_container += f"mov eax, DWORD PTR [rbp-{displace_right_1}]\n" + cdq + op[node["right"]["kind"]]+ f"DWORD PTR [rbp-{displace_right_2}]\n" + f"mov DWORD PTR [rbp-{node['displace']}], eax\n"
+                    else:
+                        asm_container += f"mov edx, DWORD PTR [rbp-{displace_right_1}]\nmov eax, DWORD PTR [rbp-{displace_right_2}]\n" + op[node["right"]["kind"]] + f"eax, edx\nmov DWORD PTR [rbp-{node['displace']}], eax\n"
+                else:
+                    if node["right"]["kind"] == "operator_mod":
+                        asm_container += f"mov eax, DWORD PTR [rbp-{displace_right_1}]\n" + cdq + op[node["right"]["kind"]]+ f"DWORD PTR [rbp-{displace_right_2}]\n" + f"mov DWORD PTR [rbp-{node['displace']}], edx\n"
+                    else:
+                        asm_container += f"mov edx, DWORD PTR [rbp-{displace_right_1}]\nmov eax, DWORD PTR [rbp-{displace_right_2}]\n" + op[node["right"]["kind"]] + f"eax, edx\nmov DWORD PTR [rbp-{node['displace']}], edx\n"
 
             elif not node["right"]["left"].isdigit() and node["right"]["right"].isdigit():  # a + 10
                 temp = None
@@ -77,7 +110,17 @@ def generate_assebler(childs):
                             found = True
                             break
                     cur_grandpa_childs = cur_grandpa_childs[-1].get("cur_grandpa_childs")
-                asm_container += f"mov eax, DWORD PTR [rbp-{displace_right_1}]\n" + op[node["right"]["kind"]] + f"eax, {node['right']['right']}\nmov DWORD PTR [rbp-{node['displace']}], eax\n"
+                if node["right"]["kind"] != "operator_mod":
+                    if node["right"]["kind"] == "operator_division":
+                        asm_container += f"mov eax, DWORD PTR [rbp-{displace_right_1}]\n" + cdq + op[node["right"]["kind"]]+ f"{node['right']['right']}\n" + f"mov DWORD PTR [rbp-{node['displace']}], eax\n"
+                    else:
+                        asm_container += f"mov edx, DWORD PTR [rbp-{displace_right_1}]\nmov eax, {node['right']['right']}\n" + op[node["right"]["kind"]] + f"eax, edx\nmov DWORD PTR [rbp-{node['displace']}], eax\n"
+                else:
+                    if node["right"]["kind"] == "operator_mod":
+                        asm_container += f"mov eax, DWORD PTR [rbp-{displace_right_1}]\n" + cdq + op[node["right"]["kind"]]+ f"{node['right']['right']}\n" + f"mov DWORD PTR [rbp-{node['displace']}], edx\n"
+                    else:
+                        asm_container += f"mov edx, DWORD PTR [rbp-{displace_right_1}]\nmov eax, {node['right']['right']}\n" + op[node["right"]["kind"]] + f"eax, edx\nmov DWORD PTR [rbp-{node['displace']}], edx\n"
+                    # asm_container += f"mov eax, DWORD PTR [rbp-{displace_right_1}]\n"+ cdq + op[node["right"]["kind"]] + f"eax, {node['right']['right']}\nmov DWORD PTR [rbp-{node['displace']}], edx\n"
 
             elif node["right"]["left"].isdigit() and not node["right"]["right"].isdigit():  # 10 + a
                 temp = None
@@ -320,6 +363,6 @@ def generate_assebler(childs):
             asm_container += f".L{marker_end}:\n"
 
         elif node.get("kind") == "keyword_break":
-            asm_container += "nop\n"
+            asm_container += f"jmp .L{marker_break}\n"
 
     return asm_container, displace

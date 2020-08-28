@@ -1,0 +1,20 @@
+<?PHP
+$a = 35;
+$b = 49;
+while ($a != 0){
+	if ($b == 0){
+		break;
+	}
+	if($a > $b) {
+		$a = $a % $b;
+	}
+	if ($a == 0) {
+		break;
+	}
+	if ($a < $b){
+		$b = $b % $a;
+	}
+}
+$result = $a + $b;
+echo $result;
+?>
