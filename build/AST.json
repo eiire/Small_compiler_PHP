@@ -2437,7 +2437,7 @@
             },
             "position": "18:0",
             "cur_grandpa_childs": null,
-            "displace": 16
+            "displace": 12
         },
         {
             "kind": "keyword_echo",

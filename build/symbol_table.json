@@ -1,12 +1,10 @@
 {
-    "0:0": [],
-    "2:1": [
-        "$a:NULL"
+    "0:0": [
+        "$a:numeric_constant",
+        "$b:numeric_constant",
+        "$result:NULL"
     ],
     "2:2": [
-        "$a:NULL"
-    ],
-    "2:3": [
         "$a:NULL"
     ],
     "2:4": [

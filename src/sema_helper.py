@@ -68,6 +68,7 @@ def get_type_var(symbol_table, current_token, current_lvl, type_or_var='TYPE'):
         if lvl[:lvl.find(':')] != current_lvl:
             if current_token.lexeme in cut_type_var(list(variables)):
                 data_var = lvl
+                break
 
     if type_or_var == 'TYPE':
         if current_token.token_type == 'string_literal':

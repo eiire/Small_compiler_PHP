@@ -23,15 +23,16 @@ def craft_symbol_table(current_lvl, current_token, next_token):
             if current_token.lexeme == '{':
                 counter_ns[current_lvl].append('{')
 
+            if check_for_identifier(current_token, next_token) and \
+                    current_token.token_type == 'identifier_variable' and next_token.token_type == 'operator_assignment':
+                symbol_table[current_lvl + ':' + str(len(counter_ns[current_lvl]))] \
+                    .append(current_token.lexeme + ':' + 'NULL')
+
             if check_for_identifier(current_token, next_token) \
                     and current_token.lexeme \
                     not in cut_type_var(list(symbol_table[current_lvl + ':' + str(len(counter_ns[current_lvl]))])):
 
-                find_fl = False
-                for var_in_ns in range(current_lvl):
-                    find_fl = find_var_above(symbol_table, current_token, current_lvl)  #
-
-                if not find_var_above(symbol_table, current_token, current_lvl) and not find_fl:
+                if not find_var_above(symbol_table, current_token, current_lvl):
 
                     if current_token.token_type == 'string_literal' or current_token.token_type == 'numeric_constant':
                         print(warnings(current_token,
@@ -56,14 +57,15 @@ def craft_symbol_table(current_lvl, current_token, next_token):
                              dict(symbol_table),
                              current_lvl + ':' + str(len(counter_ns[current_lvl])),
                              current_construction.lexeme,
-                             operation).rstrip(None))
+                             operation).rstrip(None), find_var_above(symbol_table, current_token, current_lvl))
             elif current_token.token_type == 'operator_assignment' and \
                     (next_token.token_type == 'string_literal' or next_token.token_type == 'numeric_constant'):
                 change_type_main_var(symbol_table, current_construction, next_token, current_lvl)
 
-        elif current_lvl not in lvls:
+        # Появилась новая вложенность на том же самом у р о в н е (вложенности)
+        elif current_lvl not in [int(_lvls[0:1]) for _lvls in lvls]:
             if current_token.lexeme == '{':
-                counter_ns.update({current_lvl: ['{']})
+                counter_ns[current_lvl].append('{')
 
             if check_for_identifier(current_token, next_token):
                 symbol_table.update({current_lvl + ':' + str(len(counter_ns[current_lvl])):
@@ -85,6 +87,8 @@ def check_for_identifier(current_token, next_token):
         or current_token.token_type == 'string_literal'
         or current_token.token_type == 'numeric_constant') \
             and current_construction.token_type != 'keyword_for' \
+            and current_construction.token_type != 'keyword_if' \
+            and current_construction.token_type != 'keyword_while'\
             and current_construction.token_type != 'None':
         return True
     else:
