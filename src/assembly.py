@@ -84,12 +84,12 @@ def generate_assebler(childs):
                     if node["right"]["kind"] == "operator_division":
                         asm_container += f"mov eax, DWORD PTR [rbp-{displace_right_1}]\n" + cdq + op[node["right"]["kind"]]+ f"DWORD PTR [rbp-{displace_right_2}]\n" + f"mov DWORD PTR [rbp-{node['displace']}], eax\n"
                     else:
-                        asm_container += f"mov edx, DWORD PTR [rbp-{displace_right_1}]\nmov eax, DWORD PTR [rbp-{displace_right_2}]\n" + op[node["right"]["kind"]] + f"eax, edx\nmov DWORD PTR [rbp-{node['displace']}], eax\n"
+                        asm_container += f"mov edx, DWORD PTR [rbp-{displace_right_1}]\nmov eax, DWORD PTR [rbp-{displace_right_2}]\n" + op[node["right"]["kind"]] + f"edx, eax\nmov DWORD PTR [rbp-{node['displace']}], edx\n"
                 else:
                     if node["right"]["kind"] == "operator_mod":
                         asm_container += f"mov eax, DWORD PTR [rbp-{displace_right_1}]\n" + cdq + op[node["right"]["kind"]]+ f"DWORD PTR [rbp-{displace_right_2}]\n" + f"mov DWORD PTR [rbp-{node['displace']}], edx\n"
                     else:
-                        asm_container += f"mov edx, DWORD PTR [rbp-{displace_right_1}]\nmov eax, DWORD PTR [rbp-{displace_right_2}]\n" + op[node["right"]["kind"]] + f"eax, edx\nmov DWORD PTR [rbp-{node['displace']}], edx\n"
+                        asm_container += f"mov edx, DWORD PTR [rbp-{displace_right_1}]\nmov eax, DWORD PTR [rbp-{displace_right_2}]\n" + op[node["right"]["kind"]] + f"edx, eax\nmov DWORD PTR [rbp-{node['displace']}], edx\n"
 
             elif not node["right"]["left"].isdigit() and node["right"]["right"].isdigit():  # a + 10
                 temp = None
@@ -114,12 +114,12 @@ def generate_assebler(childs):
                     if node["right"]["kind"] == "operator_division":
                         asm_container += f"mov eax, DWORD PTR [rbp-{displace_right_1}]\n" + cdq + op[node["right"]["kind"]]+ f"{node['right']['right']}\n" + f"mov DWORD PTR [rbp-{node['displace']}], eax\n"
                     else:
-                        asm_container += f"mov edx, DWORD PTR [rbp-{displace_right_1}]\nmov eax, {node['right']['right']}\n" + op[node["right"]["kind"]] + f"eax, edx\nmov DWORD PTR [rbp-{node['displace']}], eax\n"
+                        asm_container += f"mov edx, DWORD PTR [rbp-{displace_right_1}]\nmov eax, {node['right']['right']}\n" + op[node["right"]["kind"]] + f"edx, eax\nmov DWORD PTR [rbp-{node['displace']}], edx\n"
                 else:
                     if node["right"]["kind"] == "operator_mod":
                         asm_container += f"mov eax, DWORD PTR [rbp-{displace_right_1}]\n" + cdq + op[node["right"]["kind"]]+ f"{node['right']['right']}\n" + f"mov DWORD PTR [rbp-{node['displace']}], edx\n"
                     else:
-                        asm_container += f"mov edx, DWORD PTR [rbp-{displace_right_1}]\nmov eax, {node['right']['right']}\n" + op[node["right"]["kind"]] + f"eax, edx\nmov DWORD PTR [rbp-{node['displace']}], edx\n"
+                        asm_container += f"mov edx, DWORD PTR [rbp-{displace_right_1}]\nmov eax, {node['right']['right']}\n" + op[node["right"]["kind"]] + f"edx, eax\nmov DWORD PTR [rbp-{node['displace']}], edx\n"
                     # asm_container += f"mov eax, DWORD PTR [rbp-{displace_right_1}]\n"+ cdq + op[node["right"]["kind"]] + f"eax, {node['right']['right']}\nmov DWORD PTR [rbp-{node['displace']}], edx\n"
 
             elif node["right"]["left"].isdigit() and not node["right"]["right"].isdigit():  # 10 + a

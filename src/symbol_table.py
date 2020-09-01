@@ -24,7 +24,9 @@ def craft_symbol_table(current_lvl, current_token, next_token):
                 counter_ns[current_lvl].append('{')
 
             if check_for_identifier(current_token, next_token) and \
-                    current_token.token_type == 'identifier_variable' and next_token.token_type == 'operator_assignment':
+                    current_token.token_type == 'identifier_variable' and next_token.token_type == 'operator_assignment'\
+                    and current_token.lexeme \
+                    not in cut_type_var(list(symbol_table[current_lvl + ':' + str(len(counter_ns[current_lvl]))])):
                 symbol_table[current_lvl + ':' + str(len(counter_ns[current_lvl]))] \
                     .append(current_token.lexeme + ':' + 'NULL')
 
@@ -63,7 +65,7 @@ def craft_symbol_table(current_lvl, current_token, next_token):
                 change_type_main_var(symbol_table, current_construction, next_token, current_lvl)
 
         # Появилась новая вложенность на том же самом у р о в н е (вложенности)
-        elif current_lvl not in [int(_lvls[0:1]) for _lvls in lvls]:
+        else:  # elif current_lvl not in [int(_lvls[0:1]) for _lvls in lvls]
             if current_token.lexeme == '{':
                 counter_ns[current_lvl].append('{')
 

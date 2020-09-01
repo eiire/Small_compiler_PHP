@@ -46,8 +46,8 @@ jmp .L1
 .L2:
 mov edx, DWORD PTR [rbp-4]
 mov eax, DWORD PTR [rbp-8]
-add eax, edx
-mov DWORD PTR [rbp-12], eax
+add edx, eax
+mov DWORD PTR [rbp-12], edx
 mov eax, DWORD PTR [rbp-12]
 mov esi, eax
 mov edi, OFFSET FLAT:.LC0
