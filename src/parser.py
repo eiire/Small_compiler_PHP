@@ -9,7 +9,7 @@ parser_table = {
     'keyword_while': ['l_paren'],
     'identifier_variable': ['operator_assignment', 'operator_sum', 'operator_substruction', 'operator_multiplication',
                             'operator_grater', 'operator_less', 'r_paren', 'semi', 'comma', 'operator_identical',
-                            'operator_noteq', 'operator_mod'],
+                            'operator_noteq', 'operator_mod', 'operator_division'],
 
     'l_paren': ['semi', 'identifier_variable', 'string_literal', 'numeric_constant', 'r_paren'],
     'keyword_if': ['l_paren'],
@@ -29,6 +29,7 @@ parser_table = {
     'operator_sum': ['numeric_constant', 'identifier_variable', 'string_literal'],
     'operator_substruction': ['numeric_constant', 'identifier_variable'],
     'operator_mod': ['numeric_constant', 'identifier_variable'],
+    'operator_division': ['numeric_constant', 'identifier_variable'],
     'keyword_?>': ['None'],
     'operator_multiplication': ['identifier_variable', 'numeric_constant', 'string_literal'],
     'string_literal': ['operator_sum', 'semi', 'operator_multiplication', 'dot', 'comma', 'r_paren'],
@@ -128,7 +129,7 @@ def arrange_variables_in_memory(current_node, current_lvl, current_token, next_t
 
     if current_token.token_type == 'identifier_variable' and next_token.token_type == 'operator_assignment':
         if not find_var_above(symbol_table, current_token, current_lvl):
-            # special case of variable search function, vars in global scope
+            # special case of variable search function, arithmetic_operation in global scope
             if current_token.lexeme not in cut_type_var(list(symbol_table["0:0"])):
                 displace += 4
 

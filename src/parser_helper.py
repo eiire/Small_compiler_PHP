@@ -6,7 +6,7 @@ current_construction = Token('None', 'None', 0)
 constructions = {
     'assign': ['identifier_variable', 'operator_assignment', 'numeric_constant', 'operator_sum',
                'operator_substruction', 'semi', 'string_literal', 'operator_multiplication',
-               'operator_mod'],
+               'operator_mod', 'operator_division'],
 
     'keyword_echo': ['identifier_variable', 'numeric_constant', 'string_literal', 'comma'],
 

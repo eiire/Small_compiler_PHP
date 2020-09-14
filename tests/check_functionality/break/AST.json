@@ -1,0 +1,163 @@
+{
+    "kind": "program",
+    "childs": [
+        {
+            "kind": "assign",
+            "left": "$a",
+            "right": "10 ",
+            "position": "2:0",
+            "cur_grandpa_childs": null,
+            "displace": 4
+        },
+        {
+            "kind": "assign",
+            "left": "$b",
+            "right": "20 ",
+            "position": "3:0",
+            "cur_grandpa_childs": null,
+            "displace": 8
+        },
+        {
+            "kind": "keyword_while",
+            "condition": {
+                "left": "$a",
+                "op": "<",
+                "right": "$b"
+            },
+            "position": "4:0",
+            "childs": [
+                {
+                    "kind": "assign_expression",
+                    "left": "$b",
+                    "right": {
+                        "kind": "operator_substruction",
+                        "left": "$b",
+                        "right": "1"
+                    },
+                    "position": "5:4",
+                    "cur_grandpa_childs": [
+                        {
+                            "kind": "assign",
+                            "left": "$a",
+                            "right": "10 ",
+                            "position": "2:0",
+                            "cur_grandpa_childs": null,
+                            "displace": 4
+                        },
+                        {
+                            "kind": "assign",
+                            "left": "$b",
+                            "right": "20 ",
+                            "position": "3:0",
+                            "cur_grandpa_childs": null,
+                            "displace": 8
+                        },
+                        {
+                            "kind": "keyword_while",
+                            "condition": {
+                                "left": "$a",
+                                "op": "<",
+                                "right": "$b"
+                            },
+                            "position": "4:0",
+                            "childs": [],
+                            "cur_grandpa_childs": null
+                        }
+                    ],
+                    "displace": 8
+                },
+                {
+                    "kind": "keyword_if",
+                    "condition": {
+                        "left": "$b",
+                        "op": "==",
+                        "right": "15"
+                    },
+                    "position": "6:4",
+                    "childs": [
+                        {
+                            "kind": "keyword_break"
+                        }
+                    ],
+                    "cur_grandpa_childs": [
+                        {
+                            "kind": "assign",
+                            "left": "$a",
+                            "right": "10 ",
+                            "position": "2:0",
+                            "cur_grandpa_childs": null,
+                            "displace": 4
+                        },
+                        {
+                            "kind": "assign",
+                            "left": "$b",
+                            "right": "20 ",
+                            "position": "3:0",
+                            "cur_grandpa_childs": null,
+                            "displace": 8
+                        },
+                        {
+                            "kind": "keyword_while",
+                            "condition": {
+                                "left": "$a",
+                                "op": "<",
+                                "right": "$b"
+                            },
+                            "position": "4:0",
+                            "childs": [
+                                {
+                                    "kind": "assign_expression",
+                                    "left": "$b",
+                                    "right": {
+                                        "kind": "operator_substruction",
+                                        "left": "$b",
+                                        "right": "1"
+                                    },
+                                    "position": "5:4",
+                                    "cur_grandpa_childs": [
+                                        {
+                                            "kind": "assign",
+                                            "left": "$a",
+                                            "right": "10 ",
+                                            "position": "2:0",
+                                            "cur_grandpa_childs": null,
+                                            "displace": 4
+                                        },
+                                        {
+                                            "kind": "assign",
+                                            "left": "$b",
+                                            "right": "20 ",
+                                            "position": "3:0",
+                                            "cur_grandpa_childs": null,
+                                            "displace": 8
+                                        },
+                                        {
+                                            "kind": "keyword_while",
+                                            "condition": {
+                                                "left": "$a",
+                                                "op": "<",
+                                                "right": "$b"
+                                            },
+                                            "position": "4:0",
+                                            "childs": [],
+                                            "cur_grandpa_childs": null
+                                        }
+                                    ],
+                                    "displace": 8
+                                }
+                            ],
+                            "cur_grandpa_childs": null
+                        }
+                    ]
+                }
+            ],
+            "cur_grandpa_childs": null
+        },
+        {
+            "kind": "keyword_echo",
+            "position": "10:0",
+            "elements": "$b ",
+            "cur_grandpa_childs": null
+        }
+    ]
+}

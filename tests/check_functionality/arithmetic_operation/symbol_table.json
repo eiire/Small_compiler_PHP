@@ -1,0 +1,9 @@
+{
+    "0:0": [
+        "$a:numeric_constant",
+        "$b:numeric_constant",
+        "$c:NULL",
+        "$v:numeric_constant",
+        "$n:numeric_constant"
+    ]
+}

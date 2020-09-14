@@ -1,11 +1,11 @@
 1:0 <?PHP #keyword_<?php
 2:0 $a #identifier_variable
 2:3 = #operator_assignment
-2:5 21 #numeric_constant
+2:5 35 #numeric_constant
 2:7 ; #semi
 3:0 $b #identifier_variable
 3:3 = #operator_assignment
-3:5 28 #numeric_constant
+3:5 49 #numeric_constant
 3:7 ; #semi
 4:0 while #keyword_while
 4:6 ( #l_paren

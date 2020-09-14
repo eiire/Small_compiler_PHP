@@ -1,0 +1,79 @@
+{
+    "kind": "program",
+    "childs": [
+        {
+            "kind": "assign",
+            "left": "$a",
+            "right": "10 ",
+            "position": "2:0",
+            "cur_grandpa_childs": null,
+            "displace": 4
+        },
+        {
+            "kind": "assign",
+            "left": "$b",
+            "right": "35 ",
+            "position": "3:0",
+            "cur_grandpa_childs": null,
+            "displace": 8
+        },
+        {
+            "kind": "keyword_if",
+            "condition": {
+                "left": "$a",
+                "op": "!=",
+                "right": "$b"
+            },
+            "position": "4:0",
+            "childs": [
+                {
+                    "kind": "assign_expression",
+                    "left": "$a",
+                    "right": {
+                        "kind": "operator_substruction",
+                        "left": "$a",
+                        "right": "$b"
+                    },
+                    "position": "5:4",
+                    "cur_grandpa_childs": [
+                        {
+                            "kind": "assign",
+                            "left": "$a",
+                            "right": "10 ",
+                            "position": "2:0",
+                            "cur_grandpa_childs": null,
+                            "displace": 4
+                        },
+                        {
+                            "kind": "assign",
+                            "left": "$b",
+                            "right": "35 ",
+                            "position": "3:0",
+                            "cur_grandpa_childs": null,
+                            "displace": 8
+                        },
+                        {
+                            "kind": "keyword_if",
+                            "condition": {
+                                "left": "$a",
+                                "op": "!=",
+                                "right": "$b"
+                            },
+                            "position": "4:0",
+                            "childs": [],
+                            "cur_grandpa_childs": null
+                        }
+                    ],
+                    "displace": 4
+                }
+            ],
+            "cur_grandpa_childs": null
+        },
+        {
+            "kind": "keyword_echo",
+            "position": "7:0",
+            "elements": "$a ",
+            "cur_grandpa_childs": null
+        }
+    ]
+}
